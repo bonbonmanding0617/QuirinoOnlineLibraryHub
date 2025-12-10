@@ -314,6 +314,28 @@
             opacity: 0.9;
         }
 
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -549,53 +571,127 @@
             document.getElementById('addTeacherForm').addEventListener('submit', (e) => {
                 e.preventDefault();
                 
-                const firstName = document.getElementById('teacherFirstName').value;
-                const lastName = document.getElementById('teacherLastName').value;
-                const email = document.getElementById('teacherEmail').value;
-                const department = document.getElementById('teacherDepartment').value;
+                const firstName = document.getElementById('teacherFirstName').value.trim();
+                const lastName = document.getElementById('teacherLastName').value.trim();
+                const email = document.getElementById('teacherEmail').value.trim();
+                const department = document.getElementById('teacherDepartment').value.trim();
                 const password = document.getElementById('teacherPassword').value;
                 const confirmPassword = document.getElementById('teacherConfirmPassword').value;
 
+                // Validation
+                if (!firstName || !lastName) {
+                    showNotification('Please enter first and last name', 'error');
+                    return;
+                }
+
+                if (!email || !email.includes('@')) {
+                    showNotification('Please enter a valid email', 'error');
+                    return;
+                }
+
                 if (password !== confirmPassword) {
-                    alert('Passwords do not match');
+                    showNotification('Passwords do not match', 'error');
                     return;
                 }
 
                 if (password.length < 6) {
-                    alert('Password must be at least 6 characters');
+                    showNotification('Password must be at least 6 characters', 'error');
                     return;
                 }
 
-                // Create teacher account (API call would go here)
-                alert(`Teacher account created successfully!\nName: ${firstName} ${lastName}\nEmail: ${email}\nDepartment: ${department}`);
+                // Check if email already exists
+                const allUsers = storageManager.getAllUsers();
+                if (allUsers.some(u => u.email === email)) {
+                    showNotification('Email already registered', 'error');
+                    return;
+                }
+
+                // Create teacher account
+                const newTeacher = {
+                    id: 'TCH-' + Date.now(),
+                    first_name: firstName,
+                    last_name: lastName,
+                    email: email,
+                    password: password,
+                    role: 'teacher',
+                    department: department,
+                    specialization: '',
+                    phone: '',
+                    joinDate: new Date().toISOString(),
+                    status: 'active',
+                    profilePic: ''
+                };
+
+                storageManager.addUser(newTeacher);
+                showNotification(`✅ Teacher account created successfully!\nName: ${firstName} ${lastName}\nEmail: ${email}`, 'success');
                 document.getElementById('addTeacherForm').reset();
                 loadTeachers();
+                updateStats();
             });
 
             // Handle Add Admin Form
             document.getElementById('addAdminForm').addEventListener('submit', (e) => {
                 e.preventDefault();
                 
-                const firstName = document.getElementById('adminFirstName').value;
-                const lastName = document.getElementById('adminLastName').value;
-                const email = document.getElementById('adminEmail').value;
+                const firstName = document.getElementById('adminFirstName').value.trim();
+                const lastName = document.getElementById('adminLastName').value.trim();
+                const email = document.getElementById('adminEmail').value.trim();
                 const permissions = document.getElementById('adminPermissions').value;
                 const password = document.getElementById('adminPassword').value;
                 const confirmPassword = document.getElementById('adminConfirmPassword').value;
 
+                // Validation
+                if (!firstName || !lastName) {
+                    showNotification('Please enter first and last name', 'error');
+                    return;
+                }
+
+                if (!email || !email.includes('@')) {
+                    showNotification('Please enter a valid email', 'error');
+                    return;
+                }
+
+                if (!permissions) {
+                    showNotification('Please select permissions level', 'error');
+                    return;
+                }
+
                 if (password !== confirmPassword) {
-                    alert('Passwords do not match');
+                    showNotification('Passwords do not match', 'error');
                     return;
                 }
 
                 if (password.length < 6) {
-                    alert('Password must be at least 6 characters');
+                    showNotification('Password must be at least 6 characters', 'error');
                     return;
                 }
 
-                alert(`Admin account created successfully!\nName: ${firstName} ${lastName}\nEmail: ${email}\nPermissions: ${permissions}`);
+                // Check if email already exists
+                const allUsers = storageManager.getAllUsers();
+                if (allUsers.some(u => u.email === email)) {
+                    showNotification('Email already registered', 'error');
+                    return;
+                }
+
+                // Create admin account
+                const newAdmin = {
+                    id: 'ADM-' + Date.now(),
+                    first_name: firstName,
+                    last_name: lastName,
+                    email: email,
+                    password: password,
+                    role: 'admin',
+                    permissions: permissions,
+                    joinDate: new Date().toISOString(),
+                    status: 'active',
+                    profilePic: ''
+                };
+
+                storageManager.addUser(newAdmin);
+                showNotification(`✅ Admin account created successfully!\nName: ${firstName} ${lastName}\nEmail: ${email}\nPermissions: ${permissions}`, 'success');
                 document.getElementById('addAdminForm').reset();
                 loadAdmins();
+                updateStats();
             });
 
             loadTeachers();
@@ -604,8 +700,9 @@
         });
 
         function loadTeachers() {
-            // Mock data - replace with API call
-            const teachers = JSON.parse(localStorage.getItem('teachers') || '[]');
+            // Load teachers from storageManager
+            const allUsers = storageManager.getAllUsers();
+            const teachers = allUsers.filter(u => u.role === 'teacher');
             const tableBody = document.querySelector('#teachersTable tbody');
             
             if (teachers.length === 0) {
@@ -613,23 +710,24 @@
                 return;
             }
 
-            tableBody.innerHTML = teachers.map((teacher, index) => `
+            tableBody.innerHTML = teachers.map((teacher) => `
                 <tr>
-                    <td>${teacher.firstName} ${teacher.lastName}</td>
+                    <td>${teacher.first_name} ${teacher.last_name}</td>
                     <td>${teacher.email}</td>
-                    <td>${teacher.department}</td>
-                    <td><span class="status-badge status-active">Active</span></td>
+                    <td>${teacher.department || 'N/A'}</td>
+                    <td><span class="status-badge status-active">${teacher.status === 'active' ? 'Active' : 'Inactive'}</span></td>
                     <td>
-                        <button class="btn btn-secondary" onclick="editTeacher(${index})">Edit</button>
-                        <button class="btn btn-danger" onclick="deleteTeacher(${index})">Delete</button>
+                        <button class="btn btn-secondary" onclick="editTeacher('${teacher.id}')">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteTeacher('${teacher.id}')">Delete</button>
                     </td>
                 </tr>
             `).join('');
         }
 
         function loadAdmins() {
-            // Mock data - replace with API call
-            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            // Load admins from storageManager
+            const allUsers = storageManager.getAllUsers();
+            const admins = allUsers.filter(u => u.role === 'admin');
             const tableBody = document.querySelector('#adminsTable tbody');
             
             if (admins.length === 0) {
@@ -637,54 +735,79 @@
                 return;
             }
 
-            tableBody.innerHTML = admins.map((admin, index) => `
+            tableBody.innerHTML = admins.map((admin) => `
                 <tr>
-                    <td>${admin.firstName} ${admin.lastName}</td>
+                    <td>${admin.first_name} ${admin.last_name}</td>
                     <td>${admin.email}</td>
-                    <td>${admin.permissions}</td>
-                    <td><span class="status-badge status-active">Active</span></td>
+                    <td>${admin.permissions || 'Standard'}</td>
+                    <td><span class="status-badge status-active">${admin.status === 'active' ? 'Active' : 'Inactive'}</span></td>
                     <td>
-                        <button class="btn btn-secondary" onclick="editAdmin(${index})">Edit</button>
-                        <button class="btn btn-danger" onclick="deleteAdmin(${index})">Delete</button>
+                        <button class="btn btn-secondary" onclick="editAdmin('${admin.id}')">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteAdmin('${admin.id}')">Delete</button>
                     </td>
                 </tr>
             `).join('');
         }
 
         function updateStats() {
-            // Mock stats - replace with actual data
-            document.getElementById('totalUsers').textContent = '150';
-            document.getElementById('totalTeachers').textContent = '12';
-            document.getElementById('totalAdmins').textContent = '3';
-            document.getElementById('totalStudents').textContent = '135';
+            // Get actual stats from storageManager
+            const allUsers = storageManager.getAllUsers();
+            const students = allUsers.filter(u => u.role === 'student').length;
+            const teachers = allUsers.filter(u => u.role === 'teacher').length;
+            const admins = allUsers.filter(u => u.role === 'admin').length;
+            const totalUsers = allUsers.length;
+
+            document.getElementById('totalUsers').textContent = totalUsers;
+            document.getElementById('totalTeachers').textContent = teachers;
+            document.getElementById('totalAdmins').textContent = admins;
+            document.getElementById('totalStudents').textContent = students;
         }
 
-        function editTeacher(index) {
+        function editTeacher(id) {
             alert('Edit functionality coming soon');
         }
 
-        function deleteTeacher(index) {
+        function deleteTeacher(id) {
             if (confirm('Are you sure you want to delete this teacher?')) {
-                const teachers = JSON.parse(localStorage.getItem('teachers') || '[]');
-                teachers.splice(index, 1);
-                localStorage.setItem('teachers', JSON.stringify(teachers));
+                storageManager.deleteUser(id);
+                showNotification('✅ Teacher deleted successfully', 'success');
                 loadTeachers();
-                alert('Teacher deleted successfully');
+                updateStats();
             }
         }
 
-        function editAdmin(index) {
+        function editAdmin(id) {
             alert('Edit functionality coming soon');
         }
 
-        function deleteAdmin(index) {
+        function deleteAdmin(id) {
             if (confirm('Are you sure you want to delete this admin?')) {
-                const admins = JSON.parse(localStorage.getItem('admins') || '[]');
-                admins.splice(index, 1);
-                localStorage.setItem('admins', JSON.stringify(admins));
+                storageManager.deleteUser(id);
+                showNotification('✅ Admin deleted successfully', 'success');
                 loadAdmins();
-                alert('Admin deleted successfully');
+                updateStats();
             }
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type}`;
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '9999';
+            notification.style.maxWidth = '400px';
+            notification.style.animation = 'slideIn 0.3s ease-in-out';
+
+            document.body.appendChild(notification);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-in-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
         }
 
         function logout() {
