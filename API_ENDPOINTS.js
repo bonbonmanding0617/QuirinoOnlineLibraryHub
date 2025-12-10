@@ -44,6 +44,113 @@ db.initializePool().catch(err => {
 });
 
 // ============================================
+// AUTHENTICATION API ENDPOINTS
+// ============================================
+
+/**
+ * POST /api/auth/register
+ * Register a new user (student or teacher)
+ * Body: { first_name, last_name, email, password, role, class, department }
+ */
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { first_name, last_name, email, password, role, class: classValue, department } = req.body;
+
+    // Validate input
+    if (!first_name || !last_name || !email || !password || !role) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    if (role !== 'student' && role !== 'teacher') {
+      return res.status(400).json({ error: 'Invalid role' });
+    }
+
+    // Check if email already exists
+    const existingUser = await dbService.getUserByEmail(email);
+    if (existingUser) {
+      return res.status(409).json({ error: 'Email already registered' });
+    }
+
+    // TODO: Hash password with bcrypt
+    // const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user
+    const result = await dbService.createUser({
+      email: email,
+      password: password, // TODO: Use hashed password
+      first_name: first_name,
+      last_name: last_name,
+      role: role,
+      class: role === 'student' ? classValue : null,
+      department: role === 'teacher' ? department : null,
+      created_at: new Date()
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'User registered successfully',
+      userId: result.insertId
+    });
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({ error: 'Registration failed' });
+  }
+});
+
+/**
+ * POST /api/auth/login
+ * Login a user
+ * Body: { email, password, role }
+ */
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password, role } = req.body;
+
+    // Validate input
+    if (!email || !password || !role) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Get user by email
+    const user = await dbService.getUserByEmail(email);
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // Check role matches
+    if (user.role !== role) {
+      return res.status(401).json({ error: 'Invalid role for this user' });
+    }
+
+    // TODO: Verify password with bcrypt
+    // const isPasswordValid = await bcrypt.compare(password, user.password);
+    // For now, simple comparison
+    if (user.password !== password) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // TODO: Generate JWT token
+    // const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET);
+
+    // Return user data (without password)
+    const { password: _, ...userWithoutPassword } = user;
+    res.json({
+      success: true,
+      message: 'Login successful',
+      user: {
+        ...userWithoutPassword,
+        userType: role // For frontend compatibility
+      }
+      // TODO: Uncomment when using JWT
+      // token: token
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+// ============================================
 // HTML PAGE ROUTES
 // ============================================
 
@@ -651,3 +758,6 @@ process.on('SIGTERM', async () => {
   await db.closePool();
   process.exit(0);
 });
+
+
+

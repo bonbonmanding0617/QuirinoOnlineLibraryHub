@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Profile - Quirino Library Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #A85C5C;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #8B3A3A;
+        }
+
+        .btn-secondary {
+            background: #6B7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5C2E2E;
+        }
+
+        .btn-danger {
+            background: #EF4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #B84040;
+        }
+
+        .profile-container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-header {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            align-items: flex-start;
+        }
+
+        .profile-picture {
+            flex-shrink: 0;
+        }
+
+        .profile-pic-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #8B3A3A;
+            font-size: 60px;
+        }
+
+        .profile-pic-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .pic-upload-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: #8B3A3A;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .pic-upload-btn:hover {
+            background: #5C2E2E;
+        }
+
+        #profilePictureInput {
+            display: none;
+        }
+
+        .profile-basic-info {
+            flex: 1;
+        }
+
+        .profile-basic-info h2 {
+            color: #8B3A3A;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .basic-info-item {
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .basic-info-label {
+            color: #6B7280;
+            font-weight: 600;
+            min-width: 100px;
+        }
+
+        .basic-info-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h3 {
+            color: #8B3A3A;
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #8B3A3A;
+            box-shadow: 0 0 0 3px rgba(139, 58, 58, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: flex-end;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .alert-success {
+            background: #FDF2F2;
+            color: #8B3A3A;
+            border: 1px solid #D97070;
+        }
+
+        .alert-error {
+            background: #FDF2F2;
+            color: #5C2E2E;
+            border: 1px solid #D97070;
+        }
+
+        .alert-info {
+            background: #FDF2F2;
+            color: #5C2E2E;
+            border: 1px solid #D97070;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #8B3A3A;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column-reverse;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>👨‍💼 Edit Admin Profile</h1>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="goBackToAdminDashboard()">← Back to Dashboard</button>
+                <button class="btn btn-danger" onclick="logout()">Logout</button>
+            </div>
+        </header>
+
+        <!-- Alert Container -->
+        <div id="alertContainer"></div>
+
+        <!-- Profile Container -->
+        <div class="profile-container">
+            <!-- Profile Header with Picture -->
+            <div class="profile-header">
+                <div class="profile-picture">
+                    <div class="profile-pic-container" id="profilePicDisplay">
+                        👨‍💼
+                    </div>
+                    <button class="pic-upload-btn" onclick="triggerProfilePictureUpload()">
+                        📷 Upload
+                    </button>
+                    <input type="file" id="profilePictureInput" accept="image/*" onchange="handleProfilePictureUpload(event)">
+                </div>
+
+                <div class="profile-basic-info">
+                    <h2 id="profileName">Admin User</h2>
+                    <div class="basic-info-item">
+                        <span class="basic-info-label">Email:</span>
+                        <span class="basic-info-value" id="profileEmail">admin@school.com</span>
+                    </div>
+                    <div class="basic-info-item">
+                        <span class="basic-info-label">Role:</span>
+                        <span class="basic-info-value" id="profileRole">Administrator</span>
+                    </div>
+                    <div class="basic-info-item">
+                        <span class="basic-info-label">Department:</span>
+                        <span class="basic-info-value" id="profileDept">Administration</span>
+                    </div>
+                    <div class="basic-info-item">
+                        <span class="basic-info-label">Joined:</span>
+                        <span class="basic-info-value" id="profileJoined">January 2023</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Form -->
+            <form id="profileForm">
+                <!-- Personal Information Section -->
+                <div class="section">
+                    <h3>📝 Personal Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Administrative Information Section -->
+                <div class="section">
+                    <h3>🏢 Administrative Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="adminRole">Admin Role</label>
+                            <select id="adminRole" name="adminRole" required>
+                                <option value="super-admin">Super Administrator</option>
+                                <option value="admin">Administrator</option>
+                                <option value="staff-admin">Staff Administrator</option>
+                                <option value="content-admin">Content Administrator</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="department">Department</label>
+                            <input type="text" id="department" name="department" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="position">Position</label>
+                            <input type="text" id="position" name="position" placeholder="e.g., Library Director">
+                        </div>
+                        <div class="form-group">
+                            <label for="officeRoom">Office Room Number</label>
+                            <input type="text" id="officeRoom" name="officeRoom" placeholder="e.g., Room 101">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bio Section -->
+                <div class="section">
+                    <h3>💬 About Me</h3>
+                    <div class="form-group">
+                        <label for="bio">Professional Bio</label>
+                        <textarea id="bio" name="bio" placeholder="Write a brief professional bio..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Contact Section -->
+                <div class="section">
+                    <h3>📞 Contact Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="officePhone">Office Phone</label>
+                            <input type="tel" id="officePhone" name="officePhone">
+                        </div>
+                        <div class="form-group">
+                            <label for="alternatePhone">Alternate Phone</label>
+                            <input type="tel" id="alternatePhone" name="alternatePhone">
+                        </div>
+                        <div class="form-group">
+                            <label for="officeAddress">Office Address</label>
+                            <input type="text" id="officeAddress" name="officeAddress" placeholder="e.g., Room 101, Building A">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preferences Section -->
+                <div class="section">
+                    <h3>⚙️ Preferences</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="emailNotifications" name="emailNotifications" checked>
+                                <span>Receive Email Notifications</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="smsNotifications" name="smsNotifications">
+                                <span>Receive SMS Notifications</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="activityNotifications" name="activityNotifications" checked>
+                                <span>Activity Log Notifications</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+
+            <!-- Security Section -->
+            <div class="section">
+                <h3>🔒 Security</h3>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-secondary" onclick="openChangePasswordModal()">Change Password</button>
+                    <button class="btn btn-secondary" onclick="openTwoFactorModal()">Two-Factor Authentication</button>
+                    <button class="btn btn-secondary" onclick="viewLoginHistory()">Login History</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="passwordModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+            <h2 style="color: #8B3A3A; margin-bottom: 20px;">Change Password</h2>
+            <div class="form-group">
+                <label for="currentPassword">Current Password</label>
+                <input type="password" id="currentPassword" name="currentPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input type="password" id="newPassword" name="newPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="closePasswordModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+            
+            if (!userData.email || userData.role !== 'admin') {
+                alert('Access denied. Administrators only.');
+                window.location.href = '../index.html';
+                return;
+            }
+
+            currentUser = userData;
+            loadProfileData();
+            setupFormHandler();
+        });
+
+        function loadProfileData() {
+            // Load from sessionStorage or API
+            document.getElementById('firstName').value = currentUser.firstName || 'Admin';
+            document.getElementById('lastName').value = currentUser.lastName || 'User';
+            document.getElementById('email').value = currentUser.email || '';
+            document.getElementById('phone').value = currentUser.phone || '';
+            document.getElementById('adminRole').value = currentUser.adminRole || 'admin';
+            document.getElementById('department').value = currentUser.department || 'Administration';
+            document.getElementById('position').value = currentUser.position || '';
+            document.getElementById('officeRoom').value = currentUser.officeRoom || '';
+            document.getElementById('bio').value = currentUser.bio || '';
+            document.getElementById('officePhone').value = currentUser.officePhone || '';
+            document.getElementById('alternatePhone').value = currentUser.alternatePhone || '';
+            document.getElementById('officeAddress').value = currentUser.officeAddress || '';
+
+            // Update profile display
+            document.getElementById('profileName').textContent = `${currentUser.firstName || 'Admin'} ${currentUser.lastName || 'User'}`;
+            document.getElementById('profileEmail').textContent = currentUser.email || '';
+            document.getElementById('profileDept').textContent = currentUser.department || 'Administration';
+            
+            // Load profile picture if exists
+            if (currentUser.profilePicture) {
+                document.getElementById('profilePicDisplay').innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
+            }
+        }
+
+        function setupFormHandler() {
+            document.getElementById('profileForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveProfileChanges();
+            });
+        }
+
+        function saveProfileChanges() {
+            const formData = new FormData(document.getElementById('profileForm'));
+            
+            const updatedUser = {
+                ...currentUser,
+                firstName: formData.get('firstName'),
+                lastName: formData.get('lastName'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                adminRole: formData.get('adminRole'),
+                department: formData.get('department'),
+                position: formData.get('position'),
+                officeRoom: formData.get('officeRoom'),
+                bio: formData.get('bio'),
+                officePhone: formData.get('officePhone'),
+                alternatePhone: formData.get('alternatePhone'),
+                officeAddress: formData.get('officeAddress'),
+                emailNotifications: document.getElementById('emailNotifications').checked,
+                smsNotifications: document.getElementById('smsNotifications').checked,
+                activityNotifications: document.getElementById('activityNotifications').checked
+            };
+
+            // Save to sessionStorage
+            sessionStorage.setItem('userData', JSON.stringify(updatedUser));
+            currentUser = updatedUser;
+            
+            showAlert('✅ Profile updated successfully!', 'success');
+            loadProfileData();
+        }
+
+        function triggerProfilePictureUpload() {
+            document.getElementById('profilePictureInput').click();
+        }
+
+        function handleProfilePictureUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showAlert('❌ Please select an image file', 'error');
+                return;
+            }
+
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showAlert('❌ File size must be less than 5MB', 'error');
+                return;
+            }
+
+            // Read file and convert to base64
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const base64String = e.target.result;
+                
+                // Update display
+                document.getElementById('profilePicDisplay').innerHTML = `<img src="${base64String}" alt="Profile">`;
+                
+                // Save to sessionStorage
+                currentUser.profilePicture = base64String;
+                sessionStorage.setItem('userData', JSON.stringify(currentUser));
+                
+                showAlert('✅ Profile picture updated successfully!', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function resetForm() {
+            loadProfileData();
+            showAlert('Form reset to last saved values', 'info');
+        }
+
+        function openChangePasswordModal() {
+            document.getElementById('passwordModal').style.display = 'flex';
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+        }
+
+        function changePassword() {
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+
+            if (!current || !newPass || !confirm) {
+                showAlert('❌ All password fields are required', 'error');
+                return;
+            }
+
+            if (newPass !== confirm) {
+                showAlert('❌ New passwords do not match', 'error');
+                return;
+            }
+
+            if (newPass.length < 6) {
+                showAlert('❌ Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            currentUser.password = newPass;
+            sessionStorage.setItem('userData', JSON.stringify(currentUser));
+            
+            closePasswordModal();
+            showAlert('✅ Password changed successfully!', 'success');
+            
+            // Clear form
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+
+        function openTwoFactorModal() {
+            alert('Two-Factor Authentication will be enabled. This feature requires additional setup.');
+        }
+
+        function viewLoginHistory() {
+            alert('Login history feature is coming soon.');
+        }
+
+        function goBackToAdminDashboard() {
+            window.location.href = 'admin-dashboard.html';
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.removeItem('userData');
+                window.location.href = '../index.html';
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alertDiv);
+
+            if (type !== 'error') {
+                setTimeout(() => {
+                    alertDiv.style.opacity = '0';
+                    alertDiv.style.transition = 'opacity 0.3s';
+                    setTimeout(() => alertDiv.remove(), 300);
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+

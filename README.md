@@ -31,7 +31,7 @@ A comprehensive web-based library management system with separate dashboards for
 1. Clone the repository
 ```bash
 git clone <repository-url>
-cd Pedlisan\ Online\ Library\ Hub
+cd Quirino\ Online\ Library\ Hub
 ```
 
 2. Install dependencies
@@ -167,3 +167,4 @@ For issues and questions, please create an issue in the repository.
 
 **Online Library Hub** - Making reading and learning accessible to all students and teachers.
 "# QuirinoOnlineLibraryHub" 
+

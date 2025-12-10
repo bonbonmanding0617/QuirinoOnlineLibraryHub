@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignments - Quirino Library Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #A85C5C;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #8B3A3A;
+        }
+
+        .btn-secondary {
+            background: #f0f2f5;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #E8D5D5;
+        }
+
+        .btn-danger {
+            background: #EF4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #B84040;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #8B3A3A;
+            margin-bottom: 25px;
+            font-size: 24px;
+            border-bottom: 2px solid #8B3A3A;
+            padding-bottom: 10px;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #FDF2F2;
+            color: #8B3A3A;
+            border: 1px solid #D97070;
+        }
+
+        .alert-error {
+            background: #FDF2F2;
+            color: #5C2E2E;
+            border: 1px solid #D97070;
+        }
+
+        .assignment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .assignment-card {
+            background: #f9f9f9;
+            border-left: 4px solid #8B3A3A;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .assignment-card:hover {
+            background: #f0f0f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .assignment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .assignment-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            flex: 1;
+        }
+
+        .assignment-subject {
+            display: inline-block;
+            background: #8B3A3A;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .assignment-details {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .assignment-description {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .assignment-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .assignment-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #FEF3F3;
+            color: #8B3A3A;
+        }
+
+        .status-submitted {
+            background: #FDF2F2;
+            color: #8B3A3A;
+        }
+
+        .status-graded {
+            background: #FDF2F2;
+            color: #5C2E2E;
+        }
+
+        .assignment-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .assignment-actions button {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            color: #999;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #8B3A3A;
+            border-bottom-color: #8B3A3A;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #8B3A3A;
+            box-shadow: 0 0 0 3px rgba(139, 58, 58, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .assignment-header {
+                flex-direction: column;
+            }
+
+            .assignment-footer {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .assignment-actions {
+                width: 100%;
+            }
+
+            .assignment-actions button {
+                flex: 1;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>📝 Assignments</h1>
+            <a href="student-dashboard.html" class="back-btn">← Back</a>
+        </header>
+
+        <!-- Alert Container -->
+        <div id="alertContainer"></div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="assignments">📋 My Assignments</button>
+            <button class="tab-btn" data-tab="create">➕ Create Assignment</button>
+        </div>
+
+        <!-- Assignments Tab -->
+        <div id="assignments" class="tab-content active">
+            <div class="section">
+                <!-- Stats -->
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalAssignments">0</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="pendingAssignments">0</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="submittedAssignments">0</div>
+                        <div class="stat-label">Submitted</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="gradedAssignments">0</div>
+                        <div class="stat-label">Graded</div>
+                    </div>
+                </div>
+
+                <h2>📋 Assignment List</h2>
+                <div class="assignment-list" id="assignmentList">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <p>No assignments yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Assignment Tab -->
+        <div id="create" class="tab-content">
+            <div class="section">
+                <h2>➕ Create New Assignment</h2>
+                <form id="assignmentForm">
+                    <div class="form-group">
+                        <label for="assignmentTitle">Assignment Title *</label>
+                        <input type="text" id="assignmentTitle" placeholder="e.g., Chapter 5 Review" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="assignmentSubject">Subject *</label>
+                            <select id="assignmentSubject" required>
+                                <option value="">Select Subject</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="Science">Science</option>
+                                <option value="English">English</option>
+                                <option value="History">History</option>
+                                <option value="Computer Science">Computer Science</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignmentDueDate">Due Date *</label>
+                            <input type="date" id="assignmentDueDate" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="assignmentDescription">Description</label>
+                        <textarea id="assignmentDescription" placeholder="Provide details about the assignment..."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="assignmentPoints">Total Points</label>
+                            <input type="number" id="assignmentPoints" min="0" max="100" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="assignmentGradeLevel">Grade Level</label>
+                            <select id="assignmentGradeLevel">
+                                <option value="">Not specified</option>
+                                <option value="9">Grade 9</option>
+                                <option value="10">Grade 10</option>
+                                <option value="11">Grade 11</option>
+                                <option value="12">Grade 12</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="reset" class="btn btn-secondary">Clear</button>
+                        <button type="submit" class="btn btn-primary">📤 Create Assignment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let assignmentsData = [];
+        let userRole = 'student';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+            
+            if (!userData.email) {
+                alert('Please login first');
+                window.location.href = '../index.html';
+                return;
+            }
+
+            userRole = userData.role || 'student';
+            setupTabHandlers();
+            loadAssignments();
+        });
+
+        function setupTabHandlers() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabName = btn.dataset.tab;
+                    
+                    // Remove active from all
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active to clicked
+                    btn.classList.add('active');
+                    document.getElementById(tabName).classList.add('active');
+                });
+            });
+        }
+
+        function loadAssignments() {
+            // Mock assignments data - replace with API call
+            assignmentsData = [
+                {
+                    id: 1,
+                    title: 'Introduction to Variables',
+                    subject: 'Computer Science',
+                    description: 'Create a program that declares and uses variables',
+                    dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+                    points: 50,
+                    gradeLevel: '10',
+                    status: 'pending',
+                    submittedDate: null,
+                    grade: null,
+                    createdBy: 'Prof. Williams'
+                },
+                {
+                    id: 2,
+                    title: 'Photosynthesis Diagram',
+                    subject: 'Science',
+                    description: 'Draw and label the photosynthesis process',
+                    dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+                    points: 30,
+                    gradeLevel: '9',
+                    status: 'submitted',
+                    submittedDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+                    grade: null,
+                    createdBy: 'Dr. Johnson'
+                },
+                {
+                    id: 3,
+                    title: 'Chapter 3 Math Problems',
+                    subject: 'Mathematics',
+                    description: 'Complete problems 1-20 from textbook',
+                    dueDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+                    points: 100,
+                    gradeLevel: '10',
+                    status: 'graded',
+                    submittedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+                    grade: 92,
+                    createdBy: 'Prof. Smith'
+                }
+            ];
+
+            displayAssignments();
+            updateStats();
+        }
+
+        function displayAssignments() {
+            const list = document.getElementById('assignmentList');
+
+            if (assignmentsData.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <p>No assignments yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = assignmentsData.map(assignment => {
+                const daysLeft = Math.ceil((assignment.dueDate - new Date()) / (1000 * 60 * 60 * 24));
+                const isOverdue = daysLeft < 0 && assignment.status === 'pending';
+                const borderColor = isOverdue ? 'border-left: 4px solid #EF4444 !important;' : '';
+
+                return `
+                    <div class="assignment-card" style="${borderColor}">
+                        <div class="assignment-header">
+                            <div>
+                                <div class="assignment-subject">${assignment.subject}</div>
+                                <div class="assignment-title">${assignment.title}</div>
+                            </div>
+                            <span class="status-badge status-${assignment.status}">
+                                ${assignment.status.toUpperCase()}
+                            </span>
+                        </div>
+                        
+                        <div class="assignment-description">${assignment.description}</div>
+                        
+                        <div class="assignment-details">
+                            📅 Due: ${assignment.dueDate.toLocaleDateString()} ${isOverdue ? '<span style="color: #EF4444; font-weight: 600;">⚠️ OVERDUE</span>' : `(${daysLeft} days left)`}
+                            <br>
+                            👨‍🏫 By: ${assignment.createdBy} | 📊 Points: ${assignment.points}
+                            ${assignment.grade !== null ? `<br>✅ Grade: <strong>${assignment.grade}/${assignment.points}</strong>` : ''}
+                        </div>
+
+                        <div class="assignment-footer">
+                            <div class="assignment-status">
+                                ${assignment.status === 'graded' ? `📈 Graded on ${new Date(assignment.submittedDate).toLocaleDateString()}` : ''}
+                            </div>
+                            <div class="assignment-actions">
+                                <button class="btn btn-secondary btn-small" onclick="viewAssignment(${assignment.id})">👁️ View</button>
+                                ${assignment.status === 'pending' ? `<button class="btn btn-primary btn-small" onclick="submitAssignment(${assignment.id})">📤 Submit</button>` : ''}
+                                <button class="btn btn-danger btn-small" onclick="deleteAssignment(${assignment.id})">🗑️ Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            const pending = assignmentsData.filter(a => a.status === 'pending').length;
+            const submitted = assignmentsData.filter(a => a.status === 'submitted').length;
+            const graded = assignmentsData.filter(a => a.status === 'graded').length;
+
+            document.getElementById('totalAssignments').textContent = assignmentsData.length;
+            document.getElementById('pendingAssignments').textContent = pending;
+            document.getElementById('submittedAssignments').textContent = submitted;
+            document.getElementById('gradedAssignments').textContent = graded;
+        }
+
+        function viewAssignment(id) {
+            const assignment = assignmentsData.find(a => a.id === id);
+            if (assignment) {
+                alert(`Assignment: ${assignment.title}\n\n${assignment.description}\n\nDue: ${assignment.dueDate.toLocaleDateString()}`);
+            }
+        }
+
+        function submitAssignment(id) {
+            const assignment = assignmentsData.find(a => a.id === id);
+            if (assignment) {
+                // TODO: Show file upload interface
+                alert('Submit Assignment feature coming soon!');
+            }
+        }
+
+        function deleteAssignment(id) {
+            if (confirm('Are you sure you want to delete this assignment? This cannot be undone.')) {
+                assignmentsData = assignmentsData.filter(a => a.id !== id);
+                displayAssignments();
+                updateStats();
+                showAlert('Assignment deleted successfully', 'success');
+            }
+        }
+
+        document.getElementById('assignmentForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const title = document.getElementById('assignmentTitle').value.trim();
+            const subject = document.getElementById('assignmentSubject').value;
+            const dueDate = new Date(document.getElementById('assignmentDueDate').value);
+            const description = document.getElementById('assignmentDescription').value.trim();
+            const points = parseInt(document.getElementById('assignmentPoints').value) || 100;
+            const gradeLevel = document.getElementById('assignmentGradeLevel').value;
+
+            if (!title || !subject) {
+                showAlert('Please fill in all required fields', 'error');
+                return;
+            }
+
+            const newAssignment = {
+                id: Math.max(0, ...assignmentsData.map(a => a.id)) + 1,
+                title,
+                subject,
+                description,
+                dueDate,
+                points,
+                gradeLevel,
+                status: 'pending',
+                submittedDate: null,
+                grade: null,
+                createdBy: 'You'
+            };
+
+            assignmentsData.push(newAssignment);
+            displayAssignments();
+            updateStats();
+            
+            document.getElementById('assignmentForm').reset();
+            
+            // Switch to assignments tab
+            document.querySelector('[data-tab="assignments"]').click();
+            
+            showAlert('Assignment created successfully!', 'success');
+        });
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alertDiv);
+
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+

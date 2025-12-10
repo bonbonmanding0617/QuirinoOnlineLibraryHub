@@ -372,3 +372,4 @@ For questions, refer to:
 - `API_ENDPOINTS.js` - Endpoint examples
 - `database/README.md` - Connection help
 - `database/queries.sql` - SQL query reference
+

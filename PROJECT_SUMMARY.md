@@ -44,7 +44,7 @@ A production-ready, full-featured Library Management System with:
 ## 📁 Complete Project Structure
 
 ```
-Pedlisan Online Library Hub/
+Quirino Online Library Hub/
 │
 ├── 📄 index.html                    [Login Page - Start Here]
 ├── 📄 server.js                     [Express Node.js Server]
@@ -156,7 +156,7 @@ Pedlisan Online Library Hub/
 
 ```bash
 # Navigate to project
-cd "Pedlisan Online Library Hub"
+cd "Quirino Online Library Hub"
 
 # Install dependencies
 npm install
@@ -214,8 +214,8 @@ Click demo buttons on login page for instant access.
 Edit `assets/css/style.css` line 5-15:
 ```css
 :root {
-    --primary-color: #4F46E5;        /* Change these */
-    --secondary-color: #06B6D4;
+    --primary-color: #8B3A3A;        /* Change these */
+    --secondary-color: #C84C4C;
     /* ... more colors ... */
 }
 ```
@@ -596,3 +596,4 @@ Your **Online Library Hub** is ready to serve students and teachers!
 ---
 
 **Version 1.0.0** | **Status: Production Ready** | **Last Updated: December 2025**
+

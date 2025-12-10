@@ -24,7 +24,7 @@ A fully functional web application with:
 
 ```bash
 # Navigate to project directory
-cd "Pedlisan Online Library Hub"
+cd "Quirino Online Library Hub"
 
 # Install dependencies
 npm install
@@ -40,7 +40,7 @@ npm start
 
 ```bash
 # Navigate to project directory
-cd "Pedlisan Online Library Hub"
+cd "Quirino Online Library Hub"
 
 # Python 3
 python -m http.server 8000
@@ -183,8 +183,8 @@ On the login page, click either demo button:
 Edit CSS variables in `assets/css/style.css`:
 ```css
 :root {
-    --primary-color: #4F46E5;        /* Change this */
-    --secondary-color: #06B6D4;      /* And this */
+    --primary-color: #8B3A3A;        /* Change this */
+    --secondary-color: #C84C4C;      /* And this */
     /* ... more variables ... */
 }
 ```
@@ -299,3 +299,4 @@ python -m http.server 8000    # Quick server
 Built with ❤️ for educators and students worldwide.
 
 Version 1.0.0 | Ready for Production
+

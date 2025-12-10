@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     'create-assignment': 'Create Assignment',
                     'grade-assignment': 'Grade Assignment',
                     'students': 'Students',
+                    'borrowing-approvals': 'Borrowing Approvals',
                     'reports': 'Reports',
                     'profile': 'Profile'
                 };
@@ -163,3 +164,101 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ================================
+// Borrowing Approval Functions
+// ================================
+
+function approveBorrowing(borrowingId) {
+    if (confirm('Approve this borrowing request?')) {
+        // Find and update the borrowing request in the table
+        const table = document.getElementById('pendingRequestsTable');
+        const rows = table.querySelectorAll('tr');
+        
+        rows.forEach((row, index) => {
+            if (index === borrowingId - 1) {
+                // Move to approved list
+                const approvedTable = document.getElementById('approvedBorrowingsTable');
+                
+                // Get data from current row
+                const cells = row.querySelectorAll('td');
+                const studentName = cells[0].textContent;
+                const bookTitle = cells[1].textContent;
+                const requestedDate = cells[2].textContent;
+                const dueDate = cells[3].textContent;
+                const today = new Date().toISOString().split('T')[0];
+                
+                // Create new row for approved borrowings
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${studentName}</td>
+                    <td>${bookTitle}</td>
+                    <td>${today}</td>
+                    <td>${dueDate}</td>
+                    <td><span class="badge badge-approved">APPROVED</span></td>
+                    <td>
+                        <button class="btn-small" onclick="viewBorrowingDetails(${borrowingId})">View</button>
+                    </td>
+                `;
+                
+                // Remove pending request
+                row.remove();
+                
+                // Add to approved list
+                if (approvedTable.querySelector('.empty-state')) {
+                    approvedTable.querySelector('.empty-state').remove();
+                }
+                approvedTable.appendChild(newRow);
+                
+                // Show success message
+                showSuccessMessage('Borrowing request approved successfully!');
+            }
+        });
+    }
+}
+
+function rejectBorrowing(borrowingId) {
+    const reason = prompt('Enter rejection reason (optional):');
+    
+    if (reason !== null) {
+        const table = document.getElementById('pendingRequestsTable');
+        const rows = table.querySelectorAll('tr');
+        
+        rows.forEach((row, index) => {
+            if (index === borrowingId - 1) {
+                row.remove();
+                showSuccessMessage('Borrowing request rejected.');
+            }
+        });
+    }
+}
+
+function viewBorrowingDetails(borrowingId) {
+    alert(`Viewing details for borrowing #${borrowingId}. Full details panel would open here.`);
+}
+
+function showSuccessMessage(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #A85C5C;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 6px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        animation: slideIn 0.3s ease-in-out;
+    `;
+    alertDiv.textContent = message;
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        alertDiv.style.animation = 'slideOut 0.3s ease-in-out';
+        setTimeout(() => alertDiv.remove(), 300);
+    }, 3000);
+}
+
+
+

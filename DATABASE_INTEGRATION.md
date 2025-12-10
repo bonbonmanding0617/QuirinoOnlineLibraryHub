@@ -416,3 +416,4 @@ mysql -u root -p library_hub < backup.sql
 ---
 
 **Your database is ready! Start building those API endpoints!** 🚀
+

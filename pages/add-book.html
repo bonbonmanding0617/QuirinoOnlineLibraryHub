@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Book - Quirino Online Library Hub</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .form-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .form-container h1 {
+            color: #8B3A3A;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #8B3A3A;
+            box-shadow: 0 0 0 3px rgba(139, 58, 58, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 58, 58, 0.4);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background: #E8D5D5;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #FDF2F2;
+            color: #8B3A3A;
+            border: 1px solid #D97070;
+        }
+
+        .alert-error {
+            background: #FDF2F2;
+            color: #5C2E2E;
+            border: 1px solid #D97070;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div style="background: #f8f9fa; min-height: 100vh; padding: 40px 20px;">
+        <div class="form-container">
+            <h1>📚 Add New Book</h1>
+            <div class="alert alert-error" id="alertBox"></div>
+
+            <form id="addBookForm">
+                <div class="form-group">
+                    <label for="title">Book Title *</label>
+                    <input type="text" id="title" name="title" placeholder="Enter book title" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="author">Author *</label>
+                        <input type="text" id="author" name="author" placeholder="Author name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="isbn">ISBN *</label>
+                        <input type="text" id="isbn" name="isbn" placeholder="978-0-0000-0000-0" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="category">Category *</label>
+                        <select id="category" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="Fiction">Fiction</option>
+                            <option value="Non-Fiction">Non-Fiction</option>
+                            <option value="Science">Science</option>
+                            <option value="History">History</option>
+                            <option value="Biography">Biography</option>
+                            <option value="Mystery">Mystery</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Reference">Reference</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="publishYear">Publication Year *</label>
+                        <input type="number" id="publishYear" name="publishYear" placeholder="2025" min="1900" max="2100" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="totalCopies">Total Copies *</label>
+                        <input type="number" id="totalCopies" name="totalCopies" placeholder="5" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="availableCopies">Available Copies *</label>
+                        <input type="number" id="availableCopies" name="availableCopies" placeholder="5" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" placeholder="Enter book description..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="publisher">Publisher</label>
+                    <input type="text" id="publisher" name="publisher" placeholder="Publisher name">
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn-submit">Add Book</button>
+                    <button type="button" class="btn-cancel" onclick="window.history.back()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('addBookForm');
+        const alertBox = document.getElementById('alertBox');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            const isbn = document.getElementById('isbn').value;
+            const category = document.getElementById('category').value;
+            const publishYear = document.getElementById('publishYear').value;
+            const totalCopies = parseInt(document.getElementById('totalCopies').value);
+            const availableCopies = parseInt(document.getElementById('availableCopies').value);
+
+            // Validation
+            if (!title || !author || !isbn || !category || !publishYear || !totalCopies) {
+                showAlert('Please fill in all required fields', 'error');
+                return;
+            }
+
+            if (availableCopies > totalCopies) {
+                showAlert('Available copies cannot exceed total copies', 'error');
+                return;
+            }
+
+            // Create book object
+            const bookData = {
+                title: title,
+                author: author,
+                isbn: isbn,
+                category: category,
+                publishYear: publishYear,
+                totalCopies: totalCopies,
+                availableCopies: availableCopies,
+                description: document.getElementById('description').value,
+                publisher: document.getElementById('publisher').value,
+                addedDate: new Date().toLocaleString()
+            };
+
+            // Save to localStorage
+            let books = JSON.parse(localStorage.getItem('books')) || [];
+            books.push(bookData);
+            localStorage.setItem('books', JSON.stringify(books));
+
+            showAlert('✅ Book added successfully! Redirecting...', 'success');
+
+            setTimeout(() => {
+                window.location.href = '../pages/teacher-dashboard.html';
+            }, 1500);
+        });
+
+        function showAlert(message, type) {
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type} show`;
+
+            if (type === 'success') {
+                setTimeout(() => {
+                    alertBox.classList.remove('show');
+                }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+

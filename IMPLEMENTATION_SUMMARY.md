@@ -432,7 +432,7 @@ Your project is configured for:
 ## 📁 Project Structure
 
 ```
-Pedlisan Online Library Hub/
+Quirino Online Library Hub/
 ├── database/
 │   ├── db-connection.js      ← Connection pool
 │   ├── db-service.js         ← 40+ functions
@@ -485,3 +485,4 @@ Your **Online Library Hub** now has:
 **Happy coding! 🚀**
 
 Questions? Check the documentation files or review `database/queries.sql` for SQL reference.
+

@@ -44,6 +44,10 @@
                     <span class="icon">👥</span>
                     <span>Students</span>
                 </a>
+                <a href="#" class="nav-item" data-section="borrowing-approvals">
+                    <span class="icon">✅</span>
+                    <span>Borrowing Approvals</span>
+                </a>
                 <a href="#" class="nav-item" data-section="reports">
                     <span class="icon">📈</span>
                     <span>Reports</span>
@@ -150,7 +154,7 @@
                 <!-- Manage Books Section -->
                 <section id="manage-books" class="section">
                     <div class="action-bar">
-                        <button class="btn-primary" onclick="alert('Add Book form would open')">+ Add New Book</button>
+                        <a href="add-book.html" class="btn-primary" style="display: inline-block; padding: 10px 20px; text-decoration: none; color: white;">+ Add New Book</a>
                         <input type="text" placeholder="Search books..." class="search-input">
                     </div>
 
@@ -243,6 +247,85 @@
                     </form>
                 </section>
 
+                <!-- Borrowing Approvals Section -->
+                <section id="borrowing-approvals" class="section">
+                    <div class="approval-container">
+                        <div class="approval-section">
+                            <h3>📋 Pending Borrowing Requests</h3>
+                            <table class="approval-table">
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Book Title</th>
+                                        <th>Requested Date</th>
+                                        <th>Due Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pendingRequestsTable">
+                                    <tr>
+                                        <td>John Doe</td>
+                                        <td>The Great Gatsby</td>
+                                        <td>2024-12-10</td>
+                                        <td>2024-12-24</td>
+                                        <td><span class="badge badge-pending">PENDING</span></td>
+                                        <td>
+                                            <button class="btn-small btn-success" onclick="approveBorrowing(1)">Approve</button>
+                                            <button class="btn-small btn-danger" onclick="rejectBorrowing(1)">Reject</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jane Smith</td>
+                                        <td>To Kill a Mockingbird</td>
+                                        <td>2024-12-09</td>
+                                        <td>2024-12-23</td>
+                                        <td><span class="badge badge-pending">PENDING</span></td>
+                                        <td>
+                                            <button class="btn-small btn-success" onclick="approveBorrowing(2)">Approve</button>
+                                            <button class="btn-small btn-danger" onclick="rejectBorrowing(2)">Reject</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="empty-state" style="display:none; text-align: center; padding: 40px;">
+                                <p>✨ No pending requests</p>
+                            </div>
+                        </div>
+
+                        <div class="approval-section">
+                            <h3>✅ Approved Borrowings</h3>
+                            <table class="approval-table">
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Book Title</th>
+                                        <th>Borrowed Date</th>
+                                        <th>Due Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="approvedBorrowingsTable">
+                                    <tr>
+                                        <td>Mike Johnson</td>
+                                        <td>1984</td>
+                                        <td>2024-12-05</td>
+                                        <td>2024-12-19</td>
+                                        <td><span class="badge badge-approved">APPROVED</span></td>
+                                        <td>
+                                            <button class="btn-small" onclick="viewBorrowingDetails(3)">View</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="empty-state" style="display:none; text-align: center; padding: 40px;">
+                                <p>📖 No approved borrowings yet</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- Grade Assignment Section -->
                 <section id="grade-assignment" class="section">
                     <div class="action-bar">
@@ -261,7 +344,7 @@
                             </div>
                             <p class="submission-date">Submitted: Dec 9, 2025</p>
                             <div class="submission-actions">
-                                <button class="btn-primary" onclick="alert('Would open grading interface')">Grade</button>
+                                <a href="grade-assignment.html" class="btn-primary" style="display: inline-block; padding: 10px 15px; text-decoration: none; color: white; background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%); border-radius: 6px;">Grade</a>
                                 <button class="btn-secondary">View Submission</button>
                             </div>
                         </div>
@@ -272,7 +355,7 @@
                             </div>
                             <p class="submission-date">Submitted: Dec 15, 2025</p>
                             <div class="submission-actions">
-                                <button class="btn-primary" onclick="alert('Would open grading interface')">Grade</button>
+                                <a href="grade-assignment.html" class="btn-primary" style="display: inline-block; padding: 10px 15px; text-decoration: none; color: white; background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%); border-radius: 6px;">Grade</a>
                                 <button class="btn-secondary">View Submission</button>
                             </div>
                         </div>
@@ -409,7 +492,7 @@
                             </label>
                         </div>
 
-                        <button class="btn-edit">Edit Profile</button>
+                        <button class="btn-edit" onclick="goToProfileEdit()">Edit Profile</button>
                     </div>
                 </section>
             </div>
@@ -417,5 +500,16 @@
     </div>
 
     <script src="../assets/js/teacher-dashboard.js"></script>
+    <script>
+        function goToProfileEdit() {
+            window.location.href = 'teacher-profile-edit.html';
+        }
+    </script>
 </body>
 </html>
+
+
+
+
+
+

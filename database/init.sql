@@ -44,3 +44,4 @@ SELECT 'activity_log', COUNT(*) FROM activity_log;
 -- ============================================
 -- END OF INITIALIZATION
 -- ============================================
+

@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community - Quirino Library Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            color: #999;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #8B3A3A;
+            border-bottom-color: #8B3A3A;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #8B3A3A;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #8B3A3A;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5C2E2E;
+        }
+
+        .btn-secondary {
+            background: #f0f2f5;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #E8D5D5;
+        }
+
+        /* User Directory */
+        .user-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .user-card {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s;
+        }
+
+        .user-card:hover {
+            background: #f0f0f0;
+            border-color: #8B3A3A;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .user-actions button {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Messages */
+        .message-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #8B3A3A;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .message-item:hover {
+            background: #f0f0f0;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .message-from {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .message-preview {
+            font-size: 14px;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .message-unread {
+            font-weight: 700;
+            color: #8B3A3A;
+        }
+
+        /* Chat Window */
+        .chat-window {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-window.active {
+            display: flex;
+        }
+
+        .chat-header {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .chat-header-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .chat-header-status {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            max-height: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .message.own {
+            flex-direction: row-reverse;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            background: #8B3A3A;
+            color: white;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.own .message-bubble {
+            background: #C84C4C;
+        }
+
+        .message.other .message-bubble {
+            background: #E8D5D5;
+            color: #333;
+        }
+
+        .message-time-small {
+            font-size: 11px;
+            color: #999;
+            padding-top: 5px;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: #8B3A3A;
+        }
+
+        .chat-input button {
+            padding: 10px 20px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            color: #8B3A3A;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #8B3A3A;
+        }
+
+        .online-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #A85C5C;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #FDF2F2;
+            color: #8B3A3A;
+            border: 1px solid #D97070;
+        }
+
+        .alert-error {
+            background: #FDF2F2;
+            color: #5C2E2E;
+            border: 1px solid #D97070;
+        }
+
+        @media (max-width: 968px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            .user-card {
+                flex-wrap: wrap;
+            }
+
+            .message-bubble {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>👥 Community Hub</h1>
+            <a href="student-dashboard.html" class="back-btn">← Back</a>
+        </header>
+
+        <!-- Alert -->
+        <div id="alertContainer"></div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="directory">👤 Directory</button>
+            <button class="tab-btn" data-tab="messages">💬 Messages</button>
+        </div>
+
+        <div class="main-grid">
+            <!-- Directory Tab -->
+            <div id="directory" class="tab-content active">
+                <div class="section">
+                    <h2>Find Community Members</h2>
+                    <input type="text" id="searchUsers" class="search-box" placeholder="Search by name or school...">
+                    <div class="user-list" id="userList">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🔍</div>
+                            <p>Loading community members...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Tab -->
+            <div id="messages" class="tab-content">
+                <div class="section">
+                    <h2 id="messagesTitle">Messages</h2>
+                    <div class="message-list" id="conversationList">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">💬</div>
+                            <p>No conversations yet. Start chatting with community members!</p>
+                        </div>
+                    </div>
+
+                    <!-- Chat Window -->
+                    <div class="chat-window" id="chatWindow">
+                        <div class="chat-header">
+                            <div class="chat-header-title" id="chatTitle">Chat Title</div>
+                            <div class="chat-header-status">
+                                <span class="online-indicator"></span>
+                                <span id="chatStatus">Online</span>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-messages" id="chatMessages">
+                            <!-- Messages will be loaded here -->
+                        </div>
+
+                        <div class="chat-input">
+                            <input type="text" id="messageInput" placeholder="Type your message...">
+                            <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+                        </div>
+
+                        <div style="padding: 10px 0;">
+                            <button class="btn btn-secondary" onclick="closeChat()" style="width: 100%;">Close Chat</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h3>💡 Tips</h3>
+                <p style="font-size: 13px; line-height: 1.6; color: #666;">
+                    • Connect with students in your school<br><br>
+                    • Share e-books with classmates<br><br>
+                    • Ask questions and get help<br><br>
+                    • Build study groups<br><br>
+                    • Exchange learning resources
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let currentChatUser = null;
+        let conversations = {};
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+            
+            if (!userData.email) {
+                alert('Please login first');
+                window.location.href = '../index.html';
+                return;
+            }
+
+            currentUser = userData;
+            loadCommunityMembers();
+            setupTabHandlers();
+            setupSearchHandler();
+        });
+
+        function setupTabHandlers() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabName = btn.dataset.tab;
+                    
+                    // Remove active from all
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active to clicked
+                    btn.classList.add('active');
+                    document.getElementById(tabName).classList.add('active');
+                });
+            });
+        }
+
+        function setupSearchHandler() {
+            const searchInput = document.getElementById('searchUsers');
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                filterUsers(searchTerm);
+            });
+        }
+
+        function loadCommunityMembers() {
+            // Mock community members - replace with API call
+            const members = [
+                {
+                    id: 'student1',
+                    name: 'John Smith',
+                    school: 'Central High School',
+                    grade: '10',
+                    role: 'student',
+                    online: true
+                },
+                {
+                    id: 'student2',
+                    name: 'Sarah Johnson',
+                    school: 'Central High School',
+                    grade: '10',
+                    role: 'student',
+                    online: true
+                },
+                {
+                    id: 'teacher1',
+                    name: 'Prof. Williams',
+                    school: 'Central High School',
+                    role: 'teacher',
+                    online: false
+                },
+                {
+                    id: 'student3',
+                    name: 'Michael Brown',
+                    school: 'North Academy',
+                    grade: '9',
+                    role: 'student',
+                    online: true
+                }
+            ];
+
+            displayCommunityMembers(members);
+        }
+
+        function displayCommunityMembers(members) {
+            const userList = document.getElementById('userList');
+            
+            if (members.length === 0) {
+                userList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p>No members found</p></div>';
+                return;
+            }
+
+            userList.innerHTML = members
+                .filter(m => m.id !== currentUser.id)
+                .map(member => `
+                    <div class="user-card">
+                        <div class="user-info">
+                            <div class="user-avatar">${member.name.charAt(0).toUpperCase()}</div>
+                            <div class="user-details">
+                                <div class="user-name">
+                                    ${member.name}
+                                    ${member.online ? '<span class="online-indicator"></span>' : ''}
+                                </div>
+                                <div class="user-role">
+                                    ${member.school || ''} 
+                                    ${member.grade ? `• Grade ${member.grade}` : ''}
+                                    • ${member.role}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-primary" onclick="startChat('${member.id}', '${member.name}')">💬 Chat</button>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function filterUsers(searchTerm) {
+            const userCards = document.querySelectorAll('.user-card');
+            let visibleCount = 0;
+
+            userCards.forEach(card => {
+                const name = card.querySelector('.user-name').textContent.toLowerCase();
+                const school = card.querySelector('.user-role').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || school.includes(searchTerm)) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (visibleCount === 0) {
+                const userList = document.getElementById('userList');
+                userList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><p>No members found matching your search</p></div>';
+            }
+        }
+
+        function startChat(userId, userName) {
+            currentChatUser = { id: userId, name: userName };
+            
+            // Switch to messages tab
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector('[data-tab="messages"]').classList.add('active');
+            document.getElementById('messages').classList.add('active');
+
+            // Show chat window
+            document.getElementById('messagesTitle').textContent = '💬 Messages';
+            document.getElementById('conversationList').style.display = 'none';
+            document.getElementById('chatWindow').classList.add('active');
+            
+            document.getElementById('chatTitle').textContent = userName;
+            loadChatMessages(userId);
+        }
+
+        function loadChatMessages(userId) {
+            // Mock messages - replace with API call
+            const messages = [
+                { from: 'other', text: 'Hey! How are you?', time: '10:30 AM' },
+                { from: 'own', text: 'Hi! I\'m doing great, thanks!', time: '10:31 AM' },
+                { from: 'other', text: 'Do you want to study together for the math test?', time: '10:32 AM' }
+            ];
+
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML = messages.map(msg => `
+                <div class="message ${msg.from}">
+                    <div>
+                        <div class="message-bubble">${msg.text}</div>
+                        <div class="message-time-small">${msg.time}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+
+            if (!text) {
+                showAlert('Message cannot be empty', 'error');
+                return;
+            }
+
+            // TODO: Send message via API
+            const chatMessages = document.getElementById('chatMessages');
+            const now = new Date();
+            const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message own';
+            messageDiv.innerHTML = `
+                <div>
+                    <div class="message-bubble">${text}</div>
+                    <div class="message-time-small">${time}</div>
+                </div>
+            `;
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            input.value = '';
+        }
+
+        function closeChat() {
+            currentChatUser = null;
+            document.getElementById('chatWindow').classList.remove('active');
+            document.getElementById('conversationList').style.display = '';
+            document.getElementById('messagesTitle').textContent = '💬 Messages';
+            document.getElementById('messageInput').value = '';
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alertDiv);
+
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+

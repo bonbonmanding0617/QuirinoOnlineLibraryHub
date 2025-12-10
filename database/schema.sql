@@ -42,13 +42,20 @@ CREATE TABLE borrowings (
     borrowed_date DATE NOT NULL,
     due_date DATE NOT NULL,
     returned_date DATE,
-    status ENUM('borrowed', 'returned', 'overdue') DEFAULT 'borrowed',
+    status ENUM('pending', 'approved', 'rejected', 'borrowed', 'returned', 'overdue') DEFAULT 'pending',
+    approval_status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+    approved_by INT,
+    approval_date DATETIME,
+    rejection_reason TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE,
+    FOREIGN KEY (approved_by) REFERENCES users(id) ON DELETE SET NULL,
     INDEX idx_user_id (user_id),
     INDEX idx_book_id (book_id),
-    INDEX idx_status (status)
+    INDEX idx_status (status),
+    INDEX idx_approval_status (approval_status)
 );
 
 -- Create Assignments Table
@@ -184,3 +191,4 @@ CREATE INDEX idx_submissions_status ON submissions(status);
 -- ============================================
 -- END OF SCHEMA
 -- ============================================
+

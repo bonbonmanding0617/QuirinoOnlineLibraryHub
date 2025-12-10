@@ -159,3 +159,6 @@ function filterBooks(filter) {
     console.log('Filtering books by:', filter);
     // In a real app, this would update the displayed books
 }
+
+
+

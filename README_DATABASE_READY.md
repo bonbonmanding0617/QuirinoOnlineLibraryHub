@@ -63,7 +63,7 @@ curl http://localhost:3000/api/books
 ## 📁 Project Structure
 
 ```
-Pedlisan Online Library Hub/
+Quirino Online Library Hub/
 ├── 📁 database/
 │   ├── db-connection.js      ✅ Connection pool (NEW)
 │   ├── db-service.js         ✅ 40+ functions (NEW)
@@ -402,3 +402,4 @@ For support, check the troubleshooting sections.
 **Difficulty:** Moderate (all code examples provided)
 
 **You've got this!** 💪
+

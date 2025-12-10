@@ -2,12 +2,12 @@
    General Styles & Variables
    ================================ */
 :root {
-    --primary-color: #4F46E5;
-    --primary-dark: #4338CA;
-    --secondary-color: #06B6D4;
-    --success-color: #10B981;
-    --warning-color: #F59E0B;
-    --danger-color: #EF4444;
+    --primary-color: #8B3A3A;
+    --primary-dark: #5C2E2E;
+    --secondary-color: #C84C4C;
+    --success-color: #A85C5C;
+    --warning-color: #C97C7C;
+    --danger-color: #B84040;
     --background: #F9FAFB;
     --surface: #FFFFFF;
     --text-primary: #1F2937;
@@ -29,6 +29,33 @@ body {
     background-color: var(--background);
     color: var(--text-primary);
     line-height: 1.6;
+}
+
+/* ================================
+   Home Link Style
+   ================================ */
+.home-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+}
+
+.back-to-home {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.back-to-home:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateX(-3px);
 }
 
 /* ================================
@@ -99,7 +126,7 @@ body {
 .form-group select:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    box-shadow: 0 0 0 3px rgba(139, 58, 58, 0.1);
 }
 
 .btn-login {
@@ -151,6 +178,57 @@ body {
     color: white;
 }
 
+/* Teacher/Admin Login Section */
+.teacher-admin-login {
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top: 1px solid var(--border-color);
+}
+
+.divider-text {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.btn-staff {
+    width: 100%;
+    padding: 11px;
+    margin-bottom: 10px;
+    background-color: transparent;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--text-primary);
+}
+
+.btn-teacher {
+    border-color: #C97C7C;
+    color: #C97C7C;
+}
+
+.btn-teacher:hover {
+    background-color: #C97C7C;
+    color: white;
+}
+
+.btn-admin {
+    border-color: #B84040;
+    color: #B84040;
+}
+
+.btn-admin:hover {
+    background-color: #B84040;
+    color: white;
+}
+
 .signup-link {
     text-align: center;
     margin-top: 20px;
@@ -161,6 +239,58 @@ body {
     color: var(--primary-color);
     text-decoration: none;
     font-weight: 600;
+}
+
+/* ================================
+   Info Section (Mission, Vision, Ebook)
+   ================================ */
+.info-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    padding: 60px 20px;
+}
+
+.info-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.info-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    height: 60px;
+}
+
+.info-card h3 {
+    font-size: 20px;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.info-card p {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
 }
 
 /* ================================
@@ -599,7 +729,7 @@ body {
 }
 
 .btn-return:hover {
-    background-color: #DC2626;
+    background-color: #B84040;
 }
 
 /* ================================
@@ -907,7 +1037,7 @@ body {
 }
 
 .btn-small.btn-danger:hover {
-    background-color: #DC2626;
+    background-color: #B84040;
 }
 
 /* ================================
@@ -952,7 +1082,7 @@ body {
 .form-section textarea:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    box-shadow: 0 0 0 3px rgba(139, 58, 58, 0.1);
 }
 
 .form-section textarea {
@@ -991,12 +1121,12 @@ body {
 }
 
 .status-badge.completed {
-    background-color: rgba(16, 185, 129, 0.1);
+    background-color: rgba(168, 92, 92, 0.1);
     color: var(--success-color);
 }
 
 .status-badge.pending {
-    background-color: rgba(245, 158, 11, 0.1);
+    background-color: rgba(201, 124, 124, 0.1);
     color: var(--warning-color);
 }
 
@@ -1184,3 +1314,106 @@ body {
         padding: 10px;
     }
 }
+
+/* ================================
+   Borrowing Approval Styles
+   ================================ */
+.approval-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.approval-section {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.approval-section h3 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 18px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.approval-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.approval-table thead {
+    background-color: var(--background);
+}
+
+.approval-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.approval-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.approval-table tbody tr:hover {
+    background-color: rgba(139, 58, 58, 0.05);
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-pending {
+    background-color: rgba(201, 124, 124, 0.1);
+    color: var(--warning-color);
+}
+
+.badge-approved {
+    background-color: rgba(168, 92, 92, 0.1);
+    color: var(--success-color);
+}
+
+.badge-rejected {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.btn-success:hover {
+    background-color: #8B3A3A;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+}
+
+.empty-state p {
+    font-size: 16px;
+}
+
+
+
+

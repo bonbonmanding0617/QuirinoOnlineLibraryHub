@@ -35,7 +35,7 @@ PHASE 2: PROJECT CONFIGURATION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 [ ] Navigate to Project Directory
-    cd "/path/to/Pedlisan Online Library Hub"
+    cd "/path/to/Quirino Online Library Hub"
 
 [ ] Create .env File
     cp .env.example .env
@@ -269,7 +269,7 @@ Solution: Kill process on port 3000 or change PORT in .env
 PROJECT FILE STRUCTURE
 ═══════════════════════════════════════════════════════════════════════════════
 
-Pedlisan Online Library Hub/
+Quirino Online Library Hub/
 ├── database/
 │   ├── db-connection.js         ← Database connection pool
 │   ├── db-service.js            ← Database service functions
@@ -392,3 +392,6 @@ console.log(checklist);
 const fs = require('fs');
 fs.writeFileSync('SETUP_CHECKLIST.txt', checklist);
 console.log('✓ Checklist saved to SETUP_CHECKLIST.txt');
+
+
+

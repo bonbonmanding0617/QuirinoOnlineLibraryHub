@@ -98,3 +98,4 @@ INSERT INTO activity_log (user_id, action, description, resource_type, resource_
 -- ============================================
 -- END OF SAMPLE DATA
 -- ============================================
+
