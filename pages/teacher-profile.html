@@ -264,7 +264,7 @@
             border: 1px solid #D97070;
         }
 
-        .school-id-note {
+        .teacher-id-note {
             background: #f0f2f5;
             padding: 12px;
             border-radius: 6px;
@@ -301,13 +301,13 @@
         <!-- Header -->
         <header>
             <h1>👤 My Profile</h1>
-            <a href="student-dashboard.html" class="back-btn">← Back to Dashboard</a>
+            <a href="teacher-dashboard.html" class="back-btn">← Back to Dashboard</a>
         </header>
 
         <div class="profile-container">
             <!-- Sidebar -->
             <div class="profile-sidebar">
-                <div class="profile-pic" id="profilePicDisplay">👤</div>
+                <div class="profile-pic" id="profilePicDisplay">👨‍🏫</div>
                 
                 <button class="upload-pic-btn" onclick="document.getElementById('profilePicInput').click()">
                     📷 Change Photo
@@ -322,12 +322,12 @@
 
                 <div class="profile-info">
                     <div class="info-item">
-                        <div class="info-label">School</div>
-                        <div class="info-value" id="schoolDisplay">-</div>
+                        <div class="info-label">Department</div>
+                        <div class="info-value" id="departmentDisplay">-</div>
                     </div>
                     <div class="info-item">
-                        <div class="info-label">Grade Level</div>
-                        <div class="info-value" id="gradeDisplay">-</div>
+                        <div class="info-label">Specialization</div>
+                        <div class="info-value" id="specializationDisplay">-</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Member Since</div>
@@ -360,21 +360,27 @@
                                 <input type="email" id="email" required>
                             </div>
                             <div class="form-group">
-                                <label for="schoolId">School ID</label>
-                                <input type="text" id="schoolId" disabled>
-                                <div class="school-id-note">
-                                    ℹ️ Your School ID cannot be changed
+                                <label for="teacherId">Teacher ID</label>
+                                <input type="text" id="teacherId" disabled>
+                                <div class="teacher-id-note">
+                                    ℹ️ Your Teacher ID cannot be changed
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="school">School/Institution</label>
-                                <select id="school" required>
-                                    <option value="">Select your school</option>
-                                </select>
+                                <input type="text" id="school" required>
                             </div>
                             <div class="form-group">
-                                <label for="gradeLevel">Grade Level</label>
-                                <input type="text" id="gradeLevel" placeholder="e.g., 10-A" required>
+                                <label for="department">Department</label>
+                                <input type="text" id="department" placeholder="e.g., Mathematics, English" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="specialization">Specialization</label>
+                                <input type="text" id="specialization" placeholder="e.g., Algebra & Geometry" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="text" id="phone" placeholder="e.g., 555-0201">
                             </div>
                         </div>
 
@@ -384,8 +390,6 @@
                         </div>
                     </form>
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -404,8 +408,14 @@
                 return;
             }
 
+            // Verify user is a teacher
+            if (userData.role !== 'teacher') {
+                alert('Access denied. This page is for teachers only.');
+                window.location.href = '../index.html';
+                return;
+            }
+
             loadProfile();
-            loadSchools();
         });
 
         function loadProfile() {
@@ -419,38 +429,21 @@
             document.getElementById('firstName').value = userData.first_name || '';
             document.getElementById('lastName').value = userData.last_name || '';
             document.getElementById('email').value = userData.email || '';
-            document.getElementById('schoolId').value = userData.school_id || userData.id || 'STU-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            document.getElementById('teacherId').value = userData.id || 'TEA-001';
             document.getElementById('school').value = userData.school || '';
-            document.getElementById('gradeLevel').value = userData.class || userData.department || '';
+            document.getElementById('department').value = userData.department || '';
+            document.getElementById('specialization').value = userData.specialization || '';
+            document.getElementById('phone').value = userData.phone || '';
 
             // Load sidebar info
-            document.getElementById('schoolDisplay').textContent = userData.school || 'Not assigned';
-            document.getElementById('gradeDisplay').textContent = userData.class || userData.department || 'Not assigned';
+            document.getElementById('departmentDisplay').textContent = userData.department || 'Not assigned';
+            document.getElementById('specializationDisplay').textContent = userData.specialization || 'Not assigned';
             document.getElementById('memberSinceDisplay').textContent = userData.joinDate ? new Date(userData.joinDate).toLocaleDateString() : new Date().toLocaleDateString();
 
             // Load profile picture if exists
             if (userData.profilePic) {
                 document.getElementById('profilePicDisplay').innerHTML = `<img src="${userData.profilePic}" alt="Profile">`;
             }
-        }
-
-        function loadSchools() {
-            // Mock schools data - replace with API call
-            const schools = [
-                { id: 1, name: 'Lincoln High School' },
-                { id: 2, name: 'Central Academy' },
-                { id: 3, name: 'Riverside University' },
-                { id: 4, name: 'North Star Institute' },
-                { id: 5, name: 'Merit College' }
-            ];
-
-            const schoolSelect = document.getElementById('school');
-            schools.forEach(school => {
-                const option = document.createElement('option');
-                option.value = school.id;
-                option.textContent = school.name;
-                schoolSelect.appendChild(option);
-            });
         }
 
         function handleProfilePicUpload(event) {
@@ -504,8 +497,10 @@
             userData.first_name = document.getElementById('firstName').value;
             userData.last_name = document.getElementById('lastName').value;
             userData.email = document.getElementById('email').value;
-            userData.school = document.getElementById('school').options[document.getElementById('school').selectedIndex].text;
-            userData.class = document.getElementById('gradeLevel').value;
+            userData.school = document.getElementById('school').value;
+            userData.department = document.getElementById('department').value;
+            userData.specialization = document.getElementById('specialization').value;
+            userData.phone = document.getElementById('phone').value;
 
             // Save to permanent storage
             storageManager.updateUser(userData);
@@ -518,36 +513,12 @@
             }, 1500);
         });
 
-        function changePassword() {
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            if (!currentPassword || !newPassword || !confirmPassword) {
-                showAlert('Please fill in all password fields', 'error');
-                return;
-            }
-
-            if (newPassword.length < 6) {
-                showAlert('New password must be at least 6 characters', 'error');
-                return;
-            }
-
-            if (newPassword !== confirmPassword) {
-                showAlert('Passwords do not match', 'error');
-                return;
-            }
-
-            // TODO: Send to API to verify current password and update
-            showAlert('Password changed successfully! (Demo Mode)', 'success');
-            document.getElementById('currentPassword').value = '';
-            document.getElementById('newPassword').value = '';
-            document.getElementById('confirmPassword').value = '';
+        function resetForm() {
+            loadProfile();
         }
 
         function resetForm() {
             loadProfile();
-            showAlert('Form reset to original values', 'info');
         }
 
         function showAlert(message, type) {
@@ -573,4 +544,3 @@
     </script>
 </body>
 </html>
-

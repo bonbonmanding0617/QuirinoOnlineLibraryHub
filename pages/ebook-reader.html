@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Book Reader - Pedlisan Online Library Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            color: #333;
+        }
+
+        /* Reader Header */
+        .reader-header {
+            background: linear-gradient(135deg, #8B3A3A, #C84C4C);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .reader-title {
+            font-size: 18px;
+            font-weight: 600;
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .reader-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .reader-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .reader-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Reader Area */
+        .reader-container {
+            display: flex;
+            height: calc(100vh - 60px);
+            background: #f5f5f5;
+        }
+
+        /* Navigation Sidebar */
+        .reader-nav {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #E0E0E0;
+            overflow-y: auto;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .reader-nav h3 {
+            color: #8B3A3A;
+            margin-bottom: 15px;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .toc-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            color: #666;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .toc-item:hover,
+        .toc-item.active {
+            background: #F8F4F1;
+            border-left-color: #C84C4C;
+            color: #8B3A3A;
+            font-weight: 600;
+        }
+
+        /* Content Area */
+        .reader-content {
+            flex: 1;
+            background: white;
+            overflow-y: auto;
+            padding: 40px;
+            line-height: 1.8;
+        }
+
+        .book-header {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #F8F4F1;
+        }
+
+        .book-header h1 {
+            color: #8B3A3A;
+            margin-bottom: 5px;
+        }
+
+        .book-meta {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .book-chapter {
+            margin-bottom: 30px;
+        }
+
+        .book-chapter h2 {
+            color: #8B3A3A;
+            margin: 30px 0 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #F8F4F1;
+        }
+
+        .book-paragraph {
+            text-align: justify;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* Reader Footer */
+        .reader-footer {
+            background: white;
+            border-top: 1px solid #E0E0E0;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: #E0E0E0;
+            border-radius: 2px;
+            margin: 0 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8B3A3A, #C84C4C);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .page-info {
+            color: #999;
+            font-size: 12px;
+            min-width: 150px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #8B3A3A, #C84C4C);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(139, 58, 58, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            position: fixed;
+            right: -350px;
+            top: 60px;
+            width: 350px;
+            height: calc(100vh - 60px);
+            background: white;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            z-index: 200;
+            overflow-y: auto;
+            transition: right 0.3s ease;
+        }
+
+        .settings-panel.open {
+            right: 0;
+        }
+
+        .settings-header {
+            color: #8B3A3A;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .setting-group {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .setting-label {
+            color: #8B3A3A;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .setting-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .option-btn {
+            background: #F8F4F1;
+            border: 2px solid transparent;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover,
+        .option-btn.active {
+            border-color: #C84C4C;
+            background: #FFF5F5;
+            color: #8B3A3A;
+            font-weight: 600;
+        }
+
+        .slider {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: #E0E0E0;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B3A3A, #C84C4C);
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B3A3A, #C84C4C);
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Download Button */
+        .download-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .download-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #8B3A3A, #C84C4C);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(139, 58, 58, 0.3);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #8B3A3A;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 300;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .toast.success {
+            background: #27AE60;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .reader-nav {
+                display: none;
+            }
+
+            .reader-header {
+                flex-wrap: wrap;
+                padding: 10px 15px;
+            }
+
+            .reader-title {
+                margin-left: 0;
+                font-size: 16px;
+            }
+
+            .reader-controls {
+                gap: 10px;
+            }
+
+            .reader-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            .reader-content {
+                padding: 20px;
+            }
+
+            .settings-panel {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="reader-header">
+        <button class="reader-btn" id="backBtn">← Back</button>
+        <div class="reader-title" id="ebookTitle">Loading...</div>
+        <div class="reader-controls">
+            <button class="reader-btn" id="settingsBtn">⚙️ Settings</button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="reader-container">
+        <!-- Navigation Sidebar -->
+        <div class="reader-nav">
+            <h3>📖 Contents</h3>
+            <div id="tocList">
+                <div class="toc-item active" data-chapter="0">Chapter 1: Introduction</div>
+                <div class="toc-item" data-chapter="1">Chapter 2: Getting Started</div>
+                <div class="toc-item" data-chapter="2">Chapter 3: Advanced Topics</div>
+                <div class="toc-item" data-chapter="3">Chapter 4: Examples</div>
+                <div class="toc-item" data-chapter="4">Chapter 5: Conclusion</div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="reader-content" id="bookContent">
+            <div class="book-header">
+                <h1 id="contentTitle">Loading Book Content...</h1>
+                <div class="book-meta">
+                    <div>By: <span id="contentAuthor">Unknown Author</span></div>
+                    <div>Published: <span id="contentDate">-</span></div>
+                </div>
+            </div>
+            <div id="contentBody"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="reader-footer">
+        <button class="nav-btn" id="prevBtn" disabled>← Previous</button>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="page-info">
+            <span id="pageInfo">Page 1 of 5</span>
+        </div>
+        <button class="nav-btn" id="nextBtn">Next →</button>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-header">⚙️ Reader Settings</div>
+
+        <div class="setting-group">
+            <div class="setting-label">Font Size</div>
+            <div class="setting-options">
+                <button class="option-btn" onclick="setFontSize(14)">A</button>
+                <button class="option-btn active" onclick="setFontSize(16)">A+</button>
+                <button class="option-btn" onclick="setFontSize(18)">A++</button>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <div class="setting-label">Theme</div>
+            <div class="setting-options">
+                <button class="option-btn active" onclick="setTheme('light')">Light</button>
+                <button class="option-btn" onclick="setTheme('sepia')">Sepia</button>
+                <button class="option-btn" onclick="setTheme('dark')">Dark</button>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <div class="setting-label">Line Spacing</div>
+            <input type="range" class="slider" min="1.5" max="2.5" step="0.1" value="1.8" id="lineSpacingSlider" onchange="setLineSpacing(this.value)">
+        </div>
+
+        <div class="download-section">
+            <button class="download-btn" id="downloadBtn">⬇️ Download as PDF</button>
+            <p style="font-size: 11px; color: #999; margin-top: 10px; text-align: center;">
+                Available for registered users
+            </p>
+        </div>
+    </div>
+
+    <script src="../js/data-storage.js"></script>
+    <script>
+        // Sample book content
+        const bookContent = {
+            title: 'The Art of Programming',
+            author: 'Unknown Author',
+            date: '2024',
+            chapters: [
+                {
+                    title: 'Chapter 1: Introduction',
+                    content: `
+                        <div class="book-chapter">
+                            <h2>Chapter 1: Introduction</h2>
+                            <p class="book-paragraph">
+                                Programming is the art of instructing computers to perform specific tasks. 
+                                It combines logic, creativity, and problem-solving skills to create solutions 
+                                that impact millions of people worldwide.
+                            </p>
+                            <p class="book-paragraph">
+                                In this comprehensive guide, we will explore the fundamental concepts, best practices, 
+                                and advanced techniques that will transform you into a proficient programmer.
+                            </p>
+                            <p class="book-paragraph">
+                                Whether you are a beginner or an experienced developer looking to expand your knowledge, 
+                                this book provides practical insights and real-world examples that will enhance your skills.
+                            </p>
+                        </div>
+                    `
+                },
+                {
+                    title: 'Chapter 2: Getting Started',
+                    content: `
+                        <div class="book-chapter">
+                            <h2>Chapter 2: Getting Started</h2>
+                            <p class="book-paragraph">
+                                The first step in your programming journey is understanding the tools and environments 
+                                you'll be working with. Modern development requires a solid understanding of version control, 
+                                debugging, and testing frameworks.
+                            </p>
+                            <p class="book-paragraph">
+                                Setting up your development environment correctly from the start will save you countless hours 
+                                of troubleshooting. We recommend using industry-standard tools such as Git, VS Code, and Docker.
+                            </p>
+                            <p class="book-paragraph">
+                                Remember that every expert programmer started exactly where you are. The key is consistent practice, 
+                                learning from mistakes, and continuously improving your craft.
+                            </p>
+                        </div>
+                    `
+                },
+                {
+                    title: 'Chapter 3: Advanced Topics',
+                    content: `
+                        <div class="book-chapter">
+                            <h2>Chapter 3: Advanced Topics</h2>
+                            <p class="book-paragraph">
+                                Once you've mastered the basics, it's time to explore advanced programming concepts. 
+                                Design patterns, algorithms, and data structures form the foundation of efficient software development.
+                            </p>
+                            <p class="book-paragraph">
+                                Understanding these concepts allows you to write code that is not only functional but also 
+                                maintainable, scalable, and performant. Organizations value developers who can optimize code 
+                                and solve complex problems elegantly.
+                            </p>
+                            <p class="book-paragraph">
+                                Study the SOLID principles, learn about architectural patterns, and practice implementing solutions 
+                                that demonstrate your deep understanding of software engineering.
+                            </p>
+                        </div>
+                    `
+                },
+                {
+                    title: 'Chapter 4: Examples',
+                    content: `
+                        <div class="book-chapter">
+                            <h2>Chapter 4: Examples</h2>
+                            <p class="book-paragraph">
+                                Practice is essential in programming. Throughout this chapter, we'll walk through several 
+                                real-world examples that demonstrate the concepts covered in previous chapters.
+                            </p>
+                            <p class="book-paragraph">
+                                Each example includes step-by-step explanations, common pitfalls to avoid, and optimization tips. 
+                                We encourage you to run these examples, modify them, and experiment with different approaches.
+                            </p>
+                            <p class="book-paragraph">
+                                Building projects and solving actual problems is the best way to solidify your understanding and 
+                                develop professional skills that employers are looking for.
+                            </p>
+                        </div>
+                    `
+                },
+                {
+                    title: 'Chapter 5: Conclusion',
+                    content: `
+                        <div class="book-chapter">
+                            <h2>Chapter 5: Conclusion</h2>
+                            <p class="book-paragraph">
+                                Your journey as a programmer is just beginning. The technology landscape is constantly evolving, 
+                                and staying current requires commitment to continuous learning.
+                            </p>
+                            <p class="book-paragraph">
+                                The principles and practices we've discussed in this book provide a strong foundation that will 
+                                serve you well regardless of technological changes. Focus on understanding core concepts rather 
+                                than memorizing syntax.
+                            </p>
+                            <p class="book-paragraph">
+                                Keep building, keep learning, and remember that every line of code you write is an opportunity to improve. 
+                                Thank you for reading this book, and we wish you success in your programming endeavors!
+                            </p>
+                        </div>
+                    `
+                }
+            ]
+        };
+
+        let currentChapter = 0;
+        let currentFontSize = 16;
+        let currentTheme = 'light';
+        let currentLineSpacing = 1.8;
+
+        // Initialize on load
+        window.addEventListener('load', function() {
+            const currentUser = storageManager.getCurrentUser();
+            
+            if (!currentUser) {
+                window.location.href = './guest-login.html';
+                return;
+            }
+
+            initializeReader();
+        });
+
+        function initializeReader() {
+            const ebook = sessionStorage.getItem('currentEbook');
+            
+            if (ebook) {
+                const ebookData = JSON.parse(ebook);
+                document.getElementById('ebookTitle').textContent = ebookData.title;
+                document.getElementById('contentTitle').textContent = ebookData.title;
+            } else {
+                document.getElementById('contentTitle').textContent = bookContent.title;
+                document.getElementById('ebookTitle').textContent = bookContent.title;
+            }
+
+            document.getElementById('contentAuthor').textContent = bookContent.author;
+            document.getElementById('contentDate').textContent = bookContent.date;
+
+            attachEventListeners();
+            loadChapter(0);
+            updateProgress();
+        }
+
+        function loadChapter(chapterIndex) {
+            if (chapterIndex < 0 || chapterIndex >= bookContent.chapters.length) {
+                return;
+            }
+
+            currentChapter = chapterIndex;
+            const chapter = bookContent.chapters[chapterIndex];
+
+            document.getElementById('contentBody').innerHTML = chapter.content;
+            document.getElementById('pageInfo').textContent = `Page ${chapterIndex + 1} of ${bookContent.chapters.length}`;
+
+            // Update TOC active item
+            document.querySelectorAll('.toc-item').forEach((item, idx) => {
+                if (idx === chapterIndex) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            // Update nav buttons
+            document.getElementById('prevBtn').disabled = chapterIndex === 0;
+            document.getElementById('nextBtn').disabled = chapterIndex === bookContent.chapters.length - 1;
+
+            updateProgress();
+            
+            // Scroll to top
+            document.getElementById('bookContent').scrollTop = 0;
+        }
+
+        function updateProgress() {
+            const progress = ((currentChapter + 1) / bookContent.chapters.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function setFontSize(size) {
+            currentFontSize = size;
+            document.getElementById('bookContent').style.fontSize = size + 'px';
+            
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function setTheme(theme) {
+            currentTheme = theme;
+            
+            switch(theme) {
+                case 'light':
+                    document.getElementById('bookContent').style.background = 'white';
+                    document.getElementById('bookContent').style.color = '#333';
+                    break;
+                case 'sepia':
+                    document.getElementById('bookContent').style.background = '#F4EDE4';
+                    document.getElementById('bookContent').style.color = '#5C4033';
+                    break;
+                case 'dark':
+                    document.getElementById('bookContent').style.background = '#1a1a1a';
+                    document.getElementById('bookContent').style.color = '#E0E0E0';
+                    break;
+            }
+
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function setLineSpacing(spacing) {
+            currentLineSpacing = parseFloat(spacing);
+            const paragraphs = document.querySelectorAll('.book-paragraph');
+            paragraphs.forEach(p => {
+                p.style.lineHeight = spacing;
+            });
+        }
+
+        function attachEventListeners() {
+            document.getElementById('backBtn').addEventListener('click', () => {
+                window.history.back();
+            });
+
+            document.getElementById('settingsBtn').addEventListener('click', () => {
+                document.getElementById('settingsPanel').classList.toggle('open');
+            });
+
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                loadChapter(currentChapter + 1);
+            });
+
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                loadChapter(currentChapter - 1);
+            });
+
+            // TOC navigation
+            document.querySelectorAll('.toc-item').forEach((item, idx) => {
+                item.addEventListener('click', () => {
+                    loadChapter(idx);
+                });
+            });
+
+            // Download button
+            document.getElementById('downloadBtn').addEventListener('click', () => {
+                showToast('PDF download available for registered users only', 'info');
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    document.getElementById('nextBtn').click();
+                } else if (e.key === 'ArrowLeft') {
+                    document.getElementById('prevBtn').click();
+                }
+            });
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

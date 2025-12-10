@@ -362,6 +362,42 @@
             </div>
         </div>
 
+        <!-- Super Admin Profile Section -->
+        <div class="section">
+            <h2>👤 My Profile</h2>
+            <p style="color: #666; margin-bottom: 20px;">Your Super Admin account information.</p>
+            <a href="admin-profile.html" style="display: inline-block; background: #8B3A3A; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600;">✏️ Edit My Profile</a>
+        </div>
+
+        <!-- User Management Section -->
+        <div class="section">
+            <h2>👥 User Management System</h2>
+            <p style="color: #666; margin-bottom: 20px;">Manage all users in the system. Edit profiles, change status, and view user details from dedicated management pages.</p>
+            
+            <div class="dashboard-grid" style="margin-top: 20px;">
+                <div class="dashboard-card">
+                    <h2>📊 All Users Hub</h2>
+                    <p style="color: #666; margin-bottom: 15px;">View all users across the system with tabbed navigation by role.</p>
+                    <a href="admin-manage-users.html" style="display: inline-block; background: #8B3A3A; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600;">Go to All Users →</a>
+                </div>
+                <div class="dashboard-card">
+                    <h2>📚 Manage Students</h2>
+                    <p style="color: #666; margin-bottom: 15px;">Add, edit, and manage student accounts. Search and filter by school or grade.</p>
+                    <a href="admin-manage-students.html" style="display: inline-block; background: #8B3A3A; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600;">Manage Students →</a>
+                </div>
+                <div class="dashboard-card">
+                    <h2>👨‍🏫 Manage Teachers</h2>
+                    <p style="color: #666; margin-bottom: 15px;">Add, edit, and manage teacher accounts. Search and filter by department.</p>
+                    <a href="admin-manage-teachers.html" style="display: inline-block; background: #8B3A3A; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600;">Manage Teachers →</a>
+                </div>
+                <div class="dashboard-card">
+                    <h2>⚙️ Manage Admins</h2>
+                    <p style="color: #666; margin-bottom: 15px;">Add, edit, and manage admin accounts. Assign permissions and manage roles.</p>
+                    <a href="admin-manage-admins.html" style="display: inline-block; background: #8B3A3A; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600;">Manage Admins →</a>
+                </div>
+            </div>
+        </div>
+
         <!-- Add Teacher Section -->
         <div class="section">
             <h2>➕ Add New Teacher</h2>
@@ -495,14 +531,17 @@
         </div>
     </div>
 
+    <!-- Storage Manager Script -->
+    <script src="../js/data-storage.js"></script>
+
     <script>
         // Check if user is Super Admin
         document.addEventListener('DOMContentLoaded', () => {
-            const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+            const currentUser = storageManager.getCurrentUser();
             
-            if (!userData.role || userData.role !== 'super-admin') {
+            if (!currentUser || currentUser.role !== 'super-admin') {
                 alert('Unauthorized access! Only Super Admin can access this dashboard.');
-                window.location.href = 'index.html';
+                window.location.href = '../index.html';
                 return;
             }
 
@@ -650,8 +689,8 @@
 
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                sessionStorage.removeItem('userData');
-                window.location.href = 'index.html';
+                storageManager.clearCurrentUser();
+                window.location.href = '../index.html';
             }
         }
     </script>

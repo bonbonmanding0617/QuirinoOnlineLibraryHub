@@ -458,38 +458,6 @@
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>
-
-            <!-- Security Section -->
-            <div class="section">
-                <h3>🔒 Security</h3>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn btn-secondary" onclick="openChangePasswordModal()">Change Password</button>
-                    <button class="btn btn-secondary" onclick="openTwoFactorModal()">Two-Factor Authentication</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Change Password Modal -->
-    <div id="passwordModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
-        <div style="background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
-            <h2 style="color: #8B3A3A; margin-bottom: 20px;">Change Password</h2>
-            <div class="form-group">
-                <label for="currentPassword">Current Password</label>
-                <input type="password" id="currentPassword" name="currentPassword" required>
-            </div>
-            <div class="form-group">
-                <label for="newPassword">New Password</label>
-                <input type="password" id="newPassword" name="newPassword" required>
-            </div>
-            <div class="form-group">
-                <label for="confirmPassword">Confirm Password</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required>
-            </div>
-            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
-                <button class="btn btn-secondary" onclick="closePasswordModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
-            </div>
         </div>
     </div>
 
@@ -615,11 +583,11 @@
         }
 
         function openChangePasswordModal() {
-            document.getElementById('passwordModal').style.display = 'flex';
+            // Removed - password changes managed elsewhere
         }
 
         function closePasswordModal() {
-            document.getElementById('passwordModal').style.display = 'none';
+            // Removed
         }
 
         function changePassword() {

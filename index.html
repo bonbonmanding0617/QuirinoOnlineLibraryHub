@@ -532,6 +532,15 @@
             </div>
         </div>
 
+        <!-- Guest Access Banner -->
+        <div style="background: linear-gradient(135deg, #FFF5F5, #F8F4F1); border: 2px solid #C84C4C; border-radius: 10px; padding: 30px; margin: 40px 0; text-align: center;">
+            <h3 style="color: #8B3A3A; margin-bottom: 10px;">👤 Browse as Guest</h3>
+            <p style="color: #666; margin-bottom: 20px;">Don't have an account? No problem! Continue as a guest to browse our library, borrow books, and read e-books without registration.</p>
+            <a href="pages/guest-login.html" style="display: inline-block; background: linear-gradient(135deg, #8B3A3A, #C84C4C); color: white; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: all 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(139, 58, 58, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                📚 Continue as Guest
+            </a>
+        </div>
+
         <!-- Info Cards -->
         <div class="info-cards">
             <div class="info-card">
@@ -549,8 +558,18 @@
         </div>
     </div>
 
+    <script src="js/data-storage.js"></script>
     <script src="assets/js/auth.js"></script>
     <script>
+        // Initialize storage on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user was previously logged in
+            const currentUser = storageManager.getCurrentUser();
+            if (currentUser) {
+                redirectUserToDashboard(currentUser);
+            }
+        });
+
         function toggleRegistration() {
             const loginForm = document.getElementById('studentLogin');
             const regBox = document.getElementById('registrationBox');
@@ -576,6 +595,17 @@
                 alertDiv.style.transition = 'opacity 0.3s';
                 setTimeout(() => alertDiv.remove(), 300);
             }, 4000);
+        }
+
+        function redirectUserToDashboard(user) {
+            const dashboards = {
+                'student': 'pages/student-dashboard.html',
+                'teacher': 'pages/teacher-dashboard.html',
+                'admin': 'pages/admin-dashboard.html',
+                'super-admin': 'pages/super-admin-dashboard.html'
+            };
+            const dashboard = dashboards[user.role] || 'pages/student-dashboard.html';
+            // Optionally redirect: window.location.href = dashboard;
         }
     </script>
 </body>

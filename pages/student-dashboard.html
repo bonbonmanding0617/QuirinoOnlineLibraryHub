@@ -3,309 +3,715 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard - Online Library Hub</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <title>Student Dashboard - Quirino Library Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            overflow: hidden;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .welcome-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .welcome-section h1 {
+            color: #8B3A3A;
+            margin-bottom: 10px;
+        }
+
+        .welcome-section p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Statistics Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid #8B3A3A;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-card.issued {
+            border-left-color: #C84C4C;
+        }
+
+        .stat-card.returned {
+            border-left-color: #27ae60;
+        }
+
+        .stat-card.total {
+            border-left-color: #f39c12;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #8B3A3A;
+            margin-bottom: 10px;
+        }
+
+        .stat-card.issued .stat-number {
+            color: #C84C4C;
+        }
+
+        .stat-card.returned .stat-number {
+            color: #27ae60;
+        }
+
+        .stat-card.total .stat-number {
+            color: #f39c12;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* Section Styling */
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #8B3A3A;
+            padding-bottom: 10px;
+        }
+
+        /* Profile Grid */
+        .user-profile {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .profile-item {
+            background: #f5f7fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 3px solid #8B3A3A;
+        }
+
+        .profile-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .profile-value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table thead {
+            background: #f5f7fa;
+        }
+
+        table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+            font-size: 13px;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+        }
+
+        table tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .overdue {
+            background-color: #ffebee !important;
+        }
+
+        .overdue-text {
+            color: #c62828;
+            font-weight: bold;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: #8B3A3A;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: #5C2E2E;
+            box-shadow: 0 5px 15px rgba(139, 58, 58, 0.3);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .navbar-right {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .user-profile {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            table th, table td {
+                padding: 8px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10 15V50C10 52.2091 11.7909 54 14 54H46C48.2091 54 50 52.2091 50 50V15H10Z" stroke="#fff" stroke-width="2"/>
-                        <path d="M15 20H45" stroke="#fff" stroke-width="2"/>
-                        <path d="M15 28H45" stroke="#fff" stroke-width="2"/>
-                        <path d="M15 36H45" stroke="#fff" stroke-width="2"/>
-                        <path d="M15 44H45" stroke="#fff" stroke-width="2"/>
-                    </svg>
-                </div>
-                <h2>Library Hub</h2>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="navbar-brand">📚 Quirino Library Hub</div>
+        <div class="navbar-right">
+            <div class="nav-buttons">
+                <a href="student-dashboard.html" class="nav-btn">📊 Dashboard</a>
+                <a href="borrow-books.html" class="nav-btn">📚 Browse Books</a>
+                <a href="student-profile.html" class="nav-btn">📝 Return Book</a>
             </div>
-            
-            <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" data-section="dashboard">
-                    <span class="icon">📊</span>
-                    <span>Dashboard</span>
-                </a>
-                <a href="borrow-books.html" class="nav-item">
-                    <span class="icon">🔖</span>
-                    <span>Borrow Books</span>
-                </a>
-                <a href="#" class="nav-item" data-section="books">
-                    <span class="icon">📚</span>
-                    <span>Browse Books</span>
-                </a>
-                <a href="#" class="nav-item" data-section="my-books">
-                    <span class="icon">📖</span>
-                    <span>My Books</span>
-                </a>
-                <a href="#" class="nav-item" data-section="assignments">
-                    <span class="icon">✏️</span>
-                    <span>Assignments</span>
-                </a>
-                <a href="#" class="nav-item" data-section="profile">
-                    <span class="icon">👤</span>
-                    <span>Profile</span>
-                </a>
-            </nav>
-            
-            <div class="sidebar-footer">
-                <button class="btn-logout" onclick="logout()">Logout</button>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Header -->
-            <header class="top-header">
-                <div class="header-left">
-                    <h1 id="pageTitle">Dashboard</h1>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar" title="View Profile">👤</div>
+                <div>
+                    <div id="userName" style="font-weight: 600;">Loading...</div>
+                    <div id="studentId" style="font-size: 12px; opacity: 0.8;">ID: ---</div>
                 </div>
-                <div class="header-right">
-                    <span id="userGreeting" class="user-greeting"></span>
-                </div>
-            </header>
-
-            <!-- Content Sections -->
-            <div class="content-area">
-                <!-- Dashboard Section -->
-                <section id="dashboard" class="section active">
-                    <div class="dashboard-grid">
-                        <div class="stat-card">
-                            <div class="stat-icon">📚</div>
-                            <div class="stat-content">
-                                <h3>Books Borrowed</h3>
-                                <p class="stat-number">5</p>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">⏰</div>
-                            <div class="stat-content">
-                                <h3>Due Soon</h3>
-                                <p class="stat-number">2</p>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">✅</div>
-                            <div class="stat-content">
-                                <h3>Assignments Done</h3>
-                                <p class="stat-number">8</p>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">📈</div>
-                            <div class="stat-content">
-                                <h3>Reading Progress</h3>
-                                <p class="stat-number">65%</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="dashboard-rows">
-                        <div class="card">
-                            <h3>📅 Recent Activity</h3>
-                            <ul class="activity-list">
-                                <li>Borrowed "The Great Gatsby" - Dec 10, 2025</li>
-                                <li>Completed assignment "Book Review" - Dec 9, 2025</li>
-                                <li>Returned "1984" - Dec 8, 2025</li>
-                                <li>Borrowed "To Kill a Mockingbird" - Dec 7, 2025</li>
-                                <li>Joined reading group "Classics Club" - Dec 6, 2025</li>
-                            </ul>
-                        </div>
-
-                        <div class="card">
-                            <h3>📖 Currently Reading</h3>
-                            <div class="book-list">
-                                <div class="book-item">
-                                    <div class="book-cover">📕</div>
-                                    <div class="book-info">
-                                        <h4>The Great Gatsby</h4>
-                                        <p>F. Scott Fitzgerald</p>
-                                        <div class="progress-bar">
-                                            <div class="progress-fill" style="width: 45%"></div>
-                                        </div>
-                                        <small>45% completed</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Browse Books Section -->
-                <section id="books" class="section">
-                    <div class="search-bar">
-                        <input type="text" id="bookSearch" placeholder="Search books by title, author, or ISBN...">
-                        <select id="categoryFilter">
-                            <option value="">All Categories</option>
-                            <option value="fiction">Fiction</option>
-                            <option value="nonfiction">Non-Fiction</option>
-                            <option value="science">Science</option>
-                            <option value="history">History</option>
-                            <option value="biography">Biography</option>
-                        </select>
-                    </div>
-
-                    <div class="books-grid">
-                        <div class="book-card">
-                            <div class="book-cover">📕</div>
-                            <h4>The Great Gatsby</h4>
-                            <p class="author">F. Scott Fitzgerald</p>
-                            <p class="category">Fiction</p>
-                            <button class="btn-borrow">Borrow</button>
-                        </div>
-                        <div class="book-card">
-                            <div class="book-cover">📗</div>
-                            <h4>To Kill a Mockingbird</h4>
-                            <p class="author">Harper Lee</p>
-                            <p class="category">Fiction</p>
-                            <button class="btn-borrow">Borrow</button>
-                        </div>
-                        <div class="book-card">
-                            <div class="book-cover">📘</div>
-                            <h4>1984</h4>
-                            <p class="author">George Orwell</p>
-                            <p class="category">Fiction</p>
-                            <button class="btn-borrow">Borrow</button>
-                        </div>
-                        <div class="book-card">
-                            <div class="book-cover">📙</div>
-                            <h4>Sapiens</h4>
-                            <p class="author">Yuval Noah Harari</p>
-                            <p class="category">Non-Fiction</p>
-                            <button class="btn-borrow">Borrow</button>
-                        </div>
-                        <div class="book-card">
-                            <div class="book-cover">📕</div>
-                            <h4>Educated</h4>
-                            <p class="author">Tara Westover</p>
-                            <p class="category">Biography</p>
-                            <button class="btn-borrow">Borrow</button>
-                        </div>
-                        <div class="book-card">
-                            <div class="book-cover">📗</div>
-                            <h4>Brief History of Time</h4>
-                            <p class="author">Stephen Hawking</p>
-                            <p class="category">Science</p>
-                            <button class="btn-borrow">Borrow</button>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- My Books Section -->
-                <section id="my-books" class="section">
-                    <div class="filter-tabs">
-                        <button class="tab-btn active" data-filter="borrowed">Borrowed</button>
-                        <button class="tab-btn" data-filter="completed">Completed</button>
-                        <button class="tab-btn" data-filter="wishlist">Wishlist</button>
-                    </div>
-
-                    <div class="books-list">
-                        <div class="book-list-item">
-                            <div class="book-cover-small">📕</div>
-                            <div class="book-details">
-                                <h4>The Great Gatsby</h4>
-                                <p>F. Scott Fitzgerald</p>
-                                <small>Due: Dec 25, 2025</small>
-                            </div>
-                            <button class="btn-return">Return</button>
-                        </div>
-                        <div class="book-list-item">
-                            <div class="book-cover-small">📗</div>
-                            <div class="book-details">
-                                <h4>To Kill a Mockingbird</h4>
-                                <p>Harper Lee</p>
-                                <small>Due: Dec 28, 2025</small>
-                            </div>
-                            <button class="btn-return">Return</button>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Assignments Section -->
-                <section id="assignments" class="section">
-                    <div class="assignments-grid">
-                        <div class="assignment-card">
-                            <div class="assignment-status completed">✓</div>
-                            <h4>Book Review: The Great Gatsby</h4>
-                            <p class="teacher">Assigned by: Mr. Smith</p>
-                            <p class="due-date">Due: Dec 10, 2025</p>
-                            <div class="score-badge">95/100</div>
-                        </div>
-                        <div class="assignment-card">
-                            <div class="assignment-status pending">!</div>
-                            <h4>Character Analysis: 1984</h4>
-                            <p class="teacher">Assigned by: Ms. Johnson</p>
-                            <p class="due-date">Due: Dec 20, 2025</p>
-                            <button class="btn-submit">Submit</button>
-                        </div>
-                        <div class="assignment-card">
-                            <div class="assignment-status pending">!</div>
-                            <h4>Reading Summary: Sapiens</h4>
-                            <p class="teacher">Assigned by: Dr. Brown</p>
-                            <p class="due-date">Due: Dec 22, 2025</p>
-                            <button class="btn-submit">Submit</button>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Profile Section -->
-                <section id="profile" class="section">
-                    <div class="profile-card">
-                        <div class="profile-header">
-                            <div class="profile-avatar">👨‍🎓</div>
-                            <div class="profile-info">
-                                <h2 id="studentName">John Doe</h2>
-                                <p id="studentEmail">john.doe@school.com</p>
-                                <p id="studentClass">Class: 10-A</p>
-                            </div>
-                        </div>
-
-                        <div class="profile-stats">
-                            <div class="stat">
-                                <span class="label">Books Read</span>
-                                <span class="value">24</span>
-                            </div>
-                            <div class="stat">
-                                <span class="label">Reading Points</span>
-                                <span class="value">2,450</span>
-                            </div>
-                            <div class="stat">
-                                <span class="label">Assignments Done</span>
-                                <span class="value">18</span>
-                            </div>
-                        </div>
-
-                        <div class="profile-preferences">
-                            <h3>Preferences</h3>
-                            <label>
-                                <input type="checkbox" checked>
-                                <span>Receive assignment notifications</span>
-                            </label>
-                            <label>
-                                <input type="checkbox" checked>
-                                <span>Receive book return reminders</span>
-                            </label>
-                            <label>
-                                <input type="checkbox">
-                                <span>Receive reading recommendations</span>
-                            </label>
-                        </div>
-
-                        <button class="btn-edit">Edit Profile</button>
-                    </div>
-                </section>
             </div>
-        </main>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
     </div>
 
-    <script src="../assets/js/student-dashboard.js"></script>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1>Welcome back, <span id="studentFirstName">Student</span>! 👋</h1>
+            <p>Manage your library account, view borrowed books, and explore our collection.</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card issued">
+                <div class="stat-number" id="issuedCount">0</div>
+                <div class="stat-label">Books Borrowed</div>
+            </div>
+            <div class="stat-card returned">
+                <div class="stat-number" id="returnedCount">0</div>
+                <div class="stat-label">Books Returned</div>
+            </div>
+            <div class="stat-card total">
+                <div class="stat-number" id="totalBooks">0</div>
+                <div class="stat-label">Total Books Available</div>
+            </div>
+        </div>
+
+        <!-- Profile Information Section -->
+        <div class="section">
+            <div class="section-title">📋 Your Profile Information</div>
+            <div class="user-profile">
+                <div class="profile-item">
+                    <div class="profile-label">Student ID</div>
+                    <div class="profile-value" id="profileStudentId">---</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">Full Name</div>
+                    <div class="profile-value" id="profileFullName">---</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">Email Address</div>
+                    <div class="profile-value" id="profileEmail">---</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">Mobile Number</div>
+                    <div class="profile-value" id="profilePhone">---</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">School</div>
+                    <div class="profile-value" id="profileSchool">---</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">Class/Grade</div>
+                    <div class="profile-value" id="profileClass">---</div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">Account Status</div>
+                    <div class="profile-value" id="profileStatus">
+                        <span class="badge badge-success">Active</span>
+                    </div>
+                </div>
+                <div class="profile-item">
+                    <div class="profile-label">Member Since</div>
+                    <div class="profile-value" id="profileJoinDate">---</div>
+                </div>
+            </div>
+            <a href="student-profile.html" style="display: inline-block; margin-top: 20px;" class="btn btn-primary">✏️ Edit My Profile</a>
+        </div>
+
+        <!-- Currently Borrowed Books -->
+        <div class="section">
+            <div class="section-title">📖 Currently Borrowed Books</div>
+            <div id="borrowedBooksContainer">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Book Title</th>
+                            <th>ISBN</th>
+                            <th>Borrow Date</th>
+                            <th>Due Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="borrowedBooksTable">
+                        <tr>
+                            <td colspan="4" class="empty-state">Loading books...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="noBorrowedBooks" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">📚</div>
+                <p>No books currently borrowed. Browse the library to borrow new books!</p>
+            </div>
+        </div>
+
+        <!-- Recent Book Issues/History -->
+        <div class="section">
+            <div class="section-title">📋 Borrowing History (Last 5)</div>
+            <div id="recentIssuesContainer">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Book Title</th>
+                            <th>Borrow Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentIssuesTable">
+                        <tr>
+                            <td colspan="4" class="empty-state">Loading history...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="noRecentIssues" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">📚</div>
+                <p>No borrowing history. Start borrowing books from the library!</p>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="section">
+            <div class="section-title">⚡ Quick Actions</div>
+            <div class="btn-group">
+                <a href="student-profile.html" class="btn-primary">📝 Edit Profile</a>
+                <button class="btn-primary" onclick="logout()" style="background: #c62828;">🚪 Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/data-storage.js"></script>
+    <script>
+        // Load student data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStudentDashboard();
+        });
+
+        function loadStudentDashboard() {
+            const currentUser = storageManager.getCurrentUser();
+            
+            if (!currentUser || currentUser.role !== 'student') {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // Update header information
+            document.getElementById('studentFirstName').textContent = currentUser.first_name;
+            document.getElementById('userName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+            document.getElementById('studentId').textContent = 'ID: ' + currentUser.id;
+
+            // Update profile section
+            document.getElementById('profileStudentId').textContent = currentUser.id;
+            document.getElementById('profileFullName').textContent = currentUser.first_name + ' ' + currentUser.last_name;
+            document.getElementById('profileEmail').textContent = currentUser.email || 'N/A';
+            document.getElementById('profilePhone').textContent = currentUser.phone || 'N/A';
+            document.getElementById('profileSchool').textContent = currentUser.school || 'Quirino School';
+            document.getElementById('profileClass').textContent = currentUser.class || 'Not specified';
+            
+            // Status badge
+            const statusBadge = currentUser.status === 'active' 
+                ? '<span class="badge badge-success">Active</span>'
+                : '<span class="badge badge-danger">Inactive</span>';
+            document.getElementById('profileStatus').innerHTML = statusBadge;
+            
+            // Join date
+            if (currentUser.joinDate) {
+                const joinDate = new Date(currentUser.joinDate);
+                document.getElementById('profileJoinDate').textContent = joinDate.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+            }
+
+            // Set avatar
+            if (currentUser.profilePic) {
+                document.getElementById('userAvatar').innerHTML = `<img src="${currentUser.profilePic}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">`;
+            } else {
+                document.getElementById('userAvatar').textContent = currentUser.first_name.charAt(0).toUpperCase();
+            }
+
+            // Load statistics
+            loadDashboardStatistics(currentUser.id);
+
+            // Load borrowed books
+            loadBorrowedBooks(currentUser.id);
+
+            // Load recent issues
+            loadRecentIssues(currentUser.id);
+        }
+
+        function loadDashboardStatistics(studentId) {
+            const allUsers = storageManager.getAllUsers();
+            const books = storageManager.getAllBooks();
+
+            // Count books (would need borrowing records in real system)
+            // For now, using mock data
+            const issuedCount = 2; // Mock
+            const returnedCount = 5; // Mock
+            const totalBooks = books.length;
+
+            document.getElementById('issuedCount').textContent = issuedCount;
+            document.getElementById('returnedCount').textContent = returnedCount;
+            document.getElementById('totalBooks').textContent = totalBooks;
+        }
+
+        function loadBorrowedBooks(studentId) {
+            // Mock borrowed books data
+            const borrowedBooks = [
+                {
+                    title: 'The Great Gatsby',
+                    isbn: '978-0-7432-7356-5',
+                    borrowDate: '2024-11-15',
+                    dueDate: '2024-12-15'
+                },
+                {
+                    title: 'To Kill a Mockingbird',
+                    isbn: '978-0-06-112008-4',
+                    borrowDate: '2024-12-01',
+                    dueDate: '2024-12-20'
+                }
+            ];
+
+            const tbody = document.getElementById('borrowedBooksTable');
+            const container = document.getElementById('borrowedBooksContainer');
+            const noBooks = document.getElementById('noBorrowedBooks');
+
+            if (borrowedBooks.length === 0) {
+                container.style.display = 'none';
+                noBooks.style.display = 'block';
+                return;
+            }
+
+            tbody.innerHTML = borrowedBooks.map(book => {
+                const today = new Date();
+                const dueDate = new Date(book.dueDate);
+                const daysOverdue = Math.floor((today - dueDate) / (1000 * 60 * 60 * 24));
+                const isOverdue = daysOverdue > 0;
+
+                const rowClass = isOverdue ? 'overdue' : '';
+                const dueText = isOverdue 
+                    ? `<span class="overdue-text">${formatDate(book.dueDate)} ⚠️ ${daysOverdue} days overdue</span>`
+                    : formatDate(book.dueDate);
+
+                return `
+                    <tr class="${rowClass}">
+                        <td>${book.title}</td>
+                        <td>${book.isbn}</td>
+                        <td>${formatDate(book.borrowDate)}</td>
+                        <td>${dueText}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function loadRecentIssues(studentId) {
+            // Mock recent issues data
+            const recentIssues = [
+                {
+                    title: 'Physics Fundamentals',
+                    borrowDate: '2024-11-10',
+                    dueDate: '2024-12-10',
+                    status: 'Borrowed'
+                },
+                {
+                    title: 'Advanced Mathematics',
+                    borrowDate: '2024-10-20',
+                    dueDate: '2024-11-20',
+                    status: 'Returned'
+                },
+                {
+                    title: '1984',
+                    borrowDate: '2024-09-15',
+                    dueDate: '2024-10-15',
+                    status: 'Returned'
+                }
+            ];
+
+            const tbody = document.getElementById('recentIssuesTable');
+            const container = document.getElementById('recentIssuesContainer');
+            const noIssues = document.getElementById('noRecentIssues');
+
+            if (recentIssues.length === 0) {
+                container.style.display = 'none';
+                noIssues.style.display = 'block';
+                return;
+            }
+
+            tbody.innerHTML = recentIssues.map(issue => {
+                let statusColor = '#f39c12';
+                if (issue.status === 'Returned') statusColor = '#27ae60';
+                if (issue.status === 'Overdue') statusColor = '#e74c3c';
+
+                return `
+                    <tr>
+                        <td>${issue.title}</td>
+                        <td>${formatDate(issue.borrowDate)}</td>
+                        <td>${formatDate(issue.dueDate)}</td>
+                        <td style="font-weight: bold; color: ${statusColor};">${issue.status}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                storageManager.clearCurrentUser();
+                window.location.href = '../index.html';
+            }
+        }
+    </script>
 </body>
 </html>
-
-
-
-
-
-

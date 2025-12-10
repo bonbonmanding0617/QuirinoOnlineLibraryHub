@@ -40,17 +40,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Fallback to session storage for demo
-            const userData = {
-                id: Math.random(),
+            // Check if user already exists
+            if (storageManager.getUserByEmail(email)) {
+                showAlert('Email already registered', 'error');
+                return;
+            }
+
+            // Create new student user
+            const newStudent = storageManager.createUser({
+                first_name: firstName,
+                last_name: lastName,
                 email: email,
-                firstName: firstName,
-                lastName: lastName,
+                password: password,
                 role: 'student',
+                school: 'Quirino School',
                 class: classValue,
-                loginTime: new Date().toLocaleString()
-            };
-            sessionStorage.setItem('userData', JSON.stringify(userData));
+                status: 'active',
+                profilePic: null
+            });
+
+            // Set as current user and redirect
+            storageManager.setCurrentUser(newStudent);
             showAlert('Account created successfully! Redirecting...', 'success');
             setTimeout(() => {
                 window.location.href = 'pages/student-dashboard.html';
@@ -71,16 +81,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Demo login for students
-            const userData = {
-                email: email,
-                firstName: 'John',
-                lastName: 'Student',
-                role: 'student',
-                class: '10-A',
-                loginTime: new Date().toLocaleString()
-            };
-            sessionStorage.setItem('userData', JSON.stringify(userData));
+            // Verify user credentials
+            const user = storageManager.getUserByEmail(email);
+            if (!user || user.password !== password || user.role !== 'student') {
+                showAlert('Invalid email or password', 'error');
+                return;
+            }
+
+            if (user.status !== 'active') {
+                showAlert('Your account is not active. Contact administrator.', 'error');
+                return;
+            }
+
+            // Set as current user and redirect
+            storageManager.setCurrentUser(user);
             window.location.href = 'pages/student-dashboard.html';
         });
     }
@@ -98,16 +112,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Demo login for teachers
-            const userData = {
-                email: email,
-                firstName: 'Sarah',
-                lastName: 'Johnson',
-                role: 'teacher',
-                department: 'English Literature',
-                loginTime: new Date().toLocaleString()
-            };
-            sessionStorage.setItem('userData', JSON.stringify(userData));
+            // Verify teacher credentials
+            const user = storageManager.getUserByEmail(email);
+            if (!user || user.password !== password || user.role !== 'teacher') {
+                showAlert('Invalid email or password', 'error');
+                return;
+            }
+
+            if (user.status !== 'active') {
+                showAlert('Your account is not active. Contact administrator.', 'error');
+                return;
+            }
+
+            // Set as current user and redirect
+            storageManager.setCurrentUser(user);
+
             window.location.href = 'pages/teacher-dashboard.html';
         });
     }
@@ -125,18 +144,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Demo login for admins
-            const userData = {
-                email: email,
-                firstName: 'Admin',
-                lastName: 'User',
-                role: 'admin',
-                department: 'Administration',
-                adminRole: 'super-admin',
-                loginTime: new Date().toLocaleString()
-            };
-            sessionStorage.setItem('userData', JSON.stringify(userData));
-            window.location.href = 'pages/admin-dashboard.html';
+            // Verify admin credentials
+            const user = storageManager.getUserByEmail(email);
+            if (!user || user.password !== password || (user.role !== 'admin' && user.role !== 'super-admin')) {
+                showAlert('Invalid email or password', 'error');
+                return;
+            }
+
+            if (user.status !== 'active') {
+                showAlert('Your account is not active. Contact administrator.', 'error');
+                return;
+            }
+
+            // Set as current user and redirect
+            storageManager.setCurrentUser(user);
+            const dashboard = user.role === 'super-admin' ? 'pages/super-admin-dashboard.html' : 'pages/admin-dashboard.html';
+            window.location.href = dashboard;
         });
     }
 });

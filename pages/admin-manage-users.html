@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage All Users - Pedlisan Online Library Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            color: #8B3A3A;
+            border-bottom-color: #8B3A3A;
+        }
+
+        .tab-button:hover {
+            color: #8B3A3A;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #8B3A3A;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .number {
+            color: #8B3A3A;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        #bulkActionToolbar {
+            display: none;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .user-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .user-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .user-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            background: white;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-card-header {
+            background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .user-card-profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            overflow: hidden;
+        }
+
+        .user-card-profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-card-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .user-card-email {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .user-card-body {
+            padding: 15px;
+        }
+
+        .user-info-row {
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .user-info-label {
+            color: #999;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .user-info-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status-active {
+            background: #FDF2F2;
+            color: #8B3A3A;
+        }
+
+        .status-inactive {
+            background: #F0E8E8;
+            color: #5C2E2E;
+        }
+
+        .status-suspended {
+            background: #FFE5E5;
+            color: #D97070;
+        }
+
+        .status-pending {
+            background: #F5E8E8;
+            color: #7A4040;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .btn-action {
+            background: #8B3A3A;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-action:hover {
+            background: #5C2E2E;
+            transform: translateY(-2px);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .user-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-button {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+
+            #bulkActionToolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-action {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>👥 All Users Management</h1>
+            <a href="super-admin-dashboard.html" class="btn btn-secondary">← Back to Dashboard</a>
+        </header>
+
+        <!-- Overview Stats -->
+        <div class="stats-container">
+            <div class="stat-card" onclick="switchTab('overview')">
+                <h3>Total Users</h3>
+                <div class="number" id="totalUsers">0</div>
+            </div>
+            <div class="stat-card" onclick="switchTab('students')">
+                <h3>Students</h3>
+                <div class="number" id="studentCount">0</div>
+            </div>
+            <div class="stat-card" onclick="switchTab('teachers')">
+                <h3>Teachers</h3>
+                <div class="number" id="teacherCount">0</div>
+            </div>
+            <div class="stat-card" onclick="switchTab('admins')">
+                <h3>Admins</h3>
+                <div class="number" id="adminCount">0</div>
+            </div>
+        </div>
+
+        <!-- Bulk Action Toolbar -->
+        <div id="bulkActionToolbar">
+            <span id="selectedCount" style="font-weight: 600; color: #8B3A3A; min-width: 150px;"></span>
+            <button class="btn-action" onclick="suspendSelected()" style="background: #FFA500;">⏸️ Suspend Selected</button>
+            <button class="btn-action" onclick="deactivateSelected()" style="background: #FF9500;">🔒 Deactivate Selected</button>
+            <button class="btn-action" onclick="deleteSelected()" style="background: #EF4444;">🗑️ Delete Selected</button>
+            <button class="btn-action" onclick="clearSelection()" style="background: #6B7280;">✕ Clear Selection</button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('overview')">📊 Overview</button>
+            <button class="tab-button" onclick="switchTab('students')">📚 Students</button>
+            <button class="tab-button" onclick="switchTab('teachers')">👨‍🏫 Teachers</button>
+            <button class="tab-button" onclick="switchTab('admins')">⚙️ Admins</button>
+        </div>
+
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div id="overviewUsers" class="user-grid"></div>
+        </div>
+
+        <!-- Students Tab -->
+        <div id="students" class="tab-content">
+            <div id="studentsUsers" class="user-grid"></div>
+            <div id="emptyStudents" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">📚</div>
+                <p>No students found</p>
+            </div>
+        </div>
+
+        <!-- Teachers Tab -->
+        <div id="teachers" class="tab-content">
+            <div id="teachersUsers" class="user-grid"></div>
+            <div id="emptyTeachers" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">👨‍🏫</div>
+                <p>No teachers found</p>
+            </div>
+        </div>
+
+        <!-- Admins Tab -->
+        <div id="admins" class="tab-content">
+            <div id="adminsUsers" class="user-grid"></div>
+            <div id="emptyAdmins" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">⚙️</div>
+                <p>No admins found</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Storage Manager Script -->
+    <script src="../js/data-storage.js"></script>
+
+    <script>
+        let allUsers = [];
+        let selectedUsers = new Set();
+        let currentUser = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            currentUser = storageManager.getCurrentUser();
+            if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'super-admin')) {
+                alert('Access denied. Administrators only.');
+                window.location.href = '../index.html';
+                return;
+            }
+
+            loadUsers();
+        });
+
+        function loadUsers() {
+            allUsers = storageManager.getAllUsers();
+            updateStats();
+            displayOverview();
+            displayStudents();
+            displayTeachers();
+            displayAdmins();
+        }
+
+        function updateStats() {
+            const students = allUsers.filter(u => u.role === 'student').length;
+            const teachers = allUsers.filter(u => u.role === 'teacher').length;
+            const admins = allUsers.filter(u => u.role === 'admin' || u.role === 'super-admin').length;
+
+            document.getElementById('totalUsers').textContent = allUsers.length;
+            document.getElementById('studentCount').textContent = students;
+            document.getElementById('teacherCount').textContent = teachers;
+            document.getElementById('adminCount').textContent = admins;
+        }
+
+        function displayOverview() {
+            const container = document.getElementById('overviewUsers');
+            if (allUsers.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p>No users in system yet</p></div>';
+                return;
+            }
+            container.innerHTML = allUsers.map(u => createUserCard(u)).join('');
+            attachCheckboxListeners();
+        }
+
+        function displayStudents() {
+            const students = allUsers.filter(u => u.role === 'student');
+            const container = document.getElementById('studentsUsers');
+            const emptyState = document.getElementById('emptyStudents');
+
+            if (students.length === 0) {
+                container.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            container.style.display = 'grid';
+            emptyState.style.display = 'none';
+            container.innerHTML = students.map(u => createUserCard(u)).join('');
+            attachCheckboxListeners();
+        }
+
+        function displayTeachers() {
+            const teachers = allUsers.filter(u => u.role === 'teacher');
+            const container = document.getElementById('teachersUsers');
+            const emptyState = document.getElementById('emptyTeachers');
+
+            if (teachers.length === 0) {
+                container.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            container.style.display = 'grid';
+            emptyState.style.display = 'none';
+            container.innerHTML = teachers.map(u => createUserCard(u)).join('');
+            attachCheckboxListeners();
+        }
+
+        function displayAdmins() {
+            const admins = allUsers.filter(u => u.role === 'admin' || u.role === 'super-admin');
+            const container = document.getElementById('adminsUsers');
+            const emptyState = document.getElementById('emptyAdmins');
+
+            if (admins.length === 0) {
+                container.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            container.style.display = 'grid';
+            emptyState.style.display = 'none';
+            container.innerHTML = admins.map(u => createUserCard(u)).join('');
+            attachCheckboxListeners();
+        }
+
+        function createUserCard(user) {
+            const roleIcon = {
+                'student': '📚',
+                'teacher': '👨‍🏫',
+                'admin': '⚙️',
+                'super-admin': '👑'
+            }[user.role] || '👤';
+
+            const statusClass = {
+                'active': 'status-active',
+                'inactive': 'status-inactive',
+                'suspended': 'status-suspended',
+                'pending': 'status-pending'
+            }[user.status] || 'status-active';
+
+            const extraInfo = user.role === 'student' 
+                ? `<div class="user-info-row"><div class="user-info-label">School</div><div class="user-info-value">${user.school || 'N/A'}</div></div>`
+                : user.role === 'teacher'
+                ? `<div class="user-info-row"><div class="user-info-label">Department</div><div class="user-info-value">${user.department || 'N/A'}</div></div>`
+                : `<div class="user-info-row"><div class="user-info-label">Permission</div><div class="user-info-value">${user.permission_level || 'Admin'}</div></div>`;
+
+            return `
+                <div class="user-card" id="card-${user.id}">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" class="user-checkbox" value="${user.id}">
+                    </div>
+                    <div class="user-card-header">
+                        <div class="user-card-profile-pic">
+                            ${user.profilePicture ? `<img src="${user.profilePicture}" alt="">` : roleIcon}
+                        </div>
+                        <div class="user-card-name">${user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim()}</div>
+                        <div class="user-card-email">${user.email}</div>
+                    </div>
+                    <div class="user-card-body">
+                        <div class="user-info-row">
+                            <div class="user-info-label">ID</div>
+                            <div class="user-info-value">${user.id}</div>
+                        </div>
+                        <div class="user-info-row">
+                            <div class="user-info-label">Role</div>
+                            <div class="user-info-value">${user.role === 'super-admin' ? 'Super Admin' : user.role.charAt(0).toUpperCase() + user.role.slice(1)}</div>
+                        </div>
+                        ${extraInfo}
+                        <div class="user-info-row">
+                            <div class="user-info-label">Joined</div>
+                            <div class="user-info-value">${new Date(user.joinDate || Date.now()).toLocaleDateString()}</div>
+                        </div>
+                        <span class="status-badge ${statusClass}">${user.status || 'active'}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function attachCheckboxListeners() {
+            document.querySelectorAll('.user-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelection);
+            });
+        }
+
+        function updateSelection() {
+            selectedUsers.clear();
+            document.querySelectorAll('.user-checkbox:checked').forEach(checkbox => {
+                selectedUsers.add(checkbox.value);
+            });
+            
+            const toolbar = document.getElementById('bulkActionToolbar');
+            if (selectedUsers.size > 0) {
+                toolbar.style.display = 'flex';
+                document.getElementById('selectedCount').textContent = `✓ ${selectedUsers.size} user(s) selected`;
+            } else {
+                toolbar.style.display = 'none';
+            }
+        }
+
+        function clearSelection() {
+            selectedUsers.clear();
+            document.querySelectorAll('.user-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            document.getElementById('bulkActionToolbar').style.display = 'none';
+        }
+
+        function suspendSelected() {
+            if (selectedUsers.size === 0) return;
+            if (!confirm(`⏸️ Suspend ${selectedUsers.size} user(s)? They will not be able to login.`)) return;
+
+            selectedUsers.forEach(userId => {
+                const user = allUsers.find(u => u.id === userId);
+                if (user) {
+                    user.status = 'suspended';
+                    storageManager.updateUser(userId, user);
+                }
+            });
+
+            showNotification(`⏸️ ${selectedUsers.size} user(s) suspended`, 'success');
+            clearSelection();
+            loadUsers();
+        }
+
+        function deactivateSelected() {
+            if (selectedUsers.size === 0) return;
+            if (!confirm(`🔒 Deactivate ${selectedUsers.size} user(s)? They will be marked as inactive.`)) return;
+
+            selectedUsers.forEach(userId => {
+                const user = allUsers.find(u => u.id === userId);
+                if (user) {
+                    user.status = 'inactive';
+                    storageManager.updateUser(userId, user);
+                }
+            });
+
+            showNotification(`🔒 ${selectedUsers.size} user(s) deactivated`, 'success');
+            clearSelection();
+            loadUsers();
+        }
+
+        function deleteSelected() {
+            if (selectedUsers.size === 0) return;
+
+            const hasSuper = Array.from(selectedUsers).some(userId => {
+                const user = allUsers.find(u => u.id === userId);
+                return user && user.role === 'super-admin';
+            });
+
+            if (hasSuper) {
+                alert('⛔ Cannot delete Super Administrator accounts.');
+                return;
+            }
+
+            if (!confirm(`⚠️ Permanently delete ${selectedUsers.size} user(s)? This action cannot be undone.`)) return;
+
+            let deletedCount = 0;
+            selectedUsers.forEach(userId => {
+                storageManager.deleteUser(userId);
+                deletedCount++;
+            });
+
+            showNotification(`✅ Removed ${deletedCount} user(s) from system`, 'success');
+            clearSelection();
+            loadUsers();
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            clearSelection();
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10B981' : '#EF4444'};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                font-weight: 600;
+                z-index: 9999;
+                animation: slideIn 0.3s ease-out;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-in';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

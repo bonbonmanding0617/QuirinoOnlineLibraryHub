@@ -469,55 +469,25 @@
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>
-
-            <!-- Security Section -->
-            <div class="section">
-                <h3>🔒 Security</h3>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="btn btn-secondary" onclick="openChangePasswordModal()">Change Password</button>
-                    <button class="btn btn-secondary" onclick="openTwoFactorModal()">Two-Factor Authentication</button>
-                    <button class="btn btn-secondary" onclick="viewLoginHistory()">Login History</button>
-                </div>
-            </div>
         </div>
     </div>
 
-    <!-- Change Password Modal -->
-    <div id="passwordModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
-        <div style="background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
-            <h2 style="color: #8B3A3A; margin-bottom: 20px;">Change Password</h2>
-            <div class="form-group">
-                <label for="currentPassword">Current Password</label>
-                <input type="password" id="currentPassword" name="currentPassword" required>
-            </div>
-            <div class="form-group">
-                <label for="newPassword">New Password</label>
-                <input type="password" id="newPassword" name="newPassword" required>
-            </div>
-            <div class="form-group">
-                <label for="confirmPassword">Confirm Password</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required>
-            </div>
-            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
-                <button class="btn btn-secondary" onclick="closePasswordModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
-            </div>
-        </div>
-    </div>
+    <!-- Storage Manager Script -->
+    <script src="../js/data-storage.js"></script>
 
     <script>
         let currentUser = null;
 
         document.addEventListener('DOMContentLoaded', () => {
-            const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+            // Load from storageManager instead of sessionStorage
+            currentUser = storageManager.getCurrentUser();
             
-            if (!userData.email || userData.role !== 'admin') {
+            if (!currentUser || currentUser.role !== 'admin') {
                 alert('Access denied. Administrators only.');
                 window.location.href = '../index.html';
                 return;
             }
 
-            currentUser = userData;
             loadProfileData();
             setupFormHandler();
         });
@@ -577,8 +547,9 @@
                 activityNotifications: document.getElementById('activityNotifications').checked
             };
 
-            // Save to sessionStorage
-            sessionStorage.setItem('userData', JSON.stringify(updatedUser));
+            // Save to storageManager
+            storageManager.updateUser(currentUser.id, updatedUser);
+            storageManager.setCurrentUser(updatedUser);
             currentUser = updatedUser;
             
             showAlert('✅ Profile updated successfully!', 'success');
@@ -613,9 +584,10 @@
                 // Update display
                 document.getElementById('profilePicDisplay').innerHTML = `<img src="${base64String}" alt="Profile">`;
                 
-                // Save to sessionStorage
+                // Save to storageManager
                 currentUser.profilePicture = base64String;
-                sessionStorage.setItem('userData', JSON.stringify(currentUser));
+                storageManager.updateUser(currentUser.id, currentUser);
+                storageManager.setCurrentUser(currentUser);
                 
                 showAlert('✅ Profile picture updated successfully!', 'success');
             };
@@ -656,7 +628,8 @@
             }
 
             currentUser.password = newPass;
-            sessionStorage.setItem('userData', JSON.stringify(currentUser));
+            storageManager.updateUser(currentUser.id, currentUser);
+            storageManager.setCurrentUser(currentUser);
             
             closePasswordModal();
             showAlert('✅ Password changed successfully!', 'success');
@@ -681,7 +654,7 @@
 
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                sessionStorage.removeItem('userData');
+                storageManager.clearCurrentUser();
                 window.location.href = '../index.html';
             }
         }
