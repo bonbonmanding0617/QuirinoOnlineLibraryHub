@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Library Hub - Login</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="library-logo">
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 15V50C10 52.2091 11.7909 54 14 54H46C48.2091 54 50 52.2091 50 50V15H10Z" stroke="#4F46E5" stroke-width="2"/>
+                    <path d="M15 20H45" stroke="#4F46E5" stroke-width="2"/>
+                    <path d="M15 28H45" stroke="#4F46E5" stroke-width="2"/>
+                    <path d="M15 36H45" stroke="#4F46E5" stroke-width="2"/>
+                    <path d="M15 44H45" stroke="#4F46E5" stroke-width="2"/>
+                </svg>
+            </div>
+            <h1>Online Library Hub</h1>
+            <p class="subtitle">Welcome Back!</p>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="userType">Login As</label>
+                    <select id="userType" required>
+                        <option value="">Select your role</option>
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+            
+            <div class="demo-links">
+                <p class="or-divider">Or try demo accounts:</p>
+                <button type="button" class="btn-demo btn-demo-student">Demo - Student</button>
+                <button type="button" class="btn-demo btn-demo-teacher">Demo - Teacher</button>
+            </div>
+            
+            <div class="signup-link">
+                <p>Don't have an account? <a href="#" onclick="alert('Registration coming soon!')">Sign up here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/auth.js"></script>
+</body>
+</html>

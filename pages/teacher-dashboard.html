@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Online Library Hub</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 15V50C10 52.2091 11.7909 54 14 54H46C48.2091 54 50 52.2091 50 50V15H10Z" stroke="#fff" stroke-width="2"/>
+                        <path d="M15 20H45" stroke="#fff" stroke-width="2"/>
+                        <path d="M15 28H45" stroke="#fff" stroke-width="2"/>
+                        <path d="M15 36H45" stroke="#fff" stroke-width="2"/>
+                        <path d="M15 44H45" stroke="#fff" stroke-width="2"/>
+                    </svg>
+                </div>
+                <h2>Library Hub</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-section="manage-books">
+                    <span class="icon">📚</span>
+                    <span>Manage Books</span>
+                </a>
+                <a href="#" class="nav-item" data-section="create-assignment">
+                    <span class="icon">➕</span>
+                    <span>Create Assignment</span>
+                </a>
+                <a href="#" class="nav-item" data-section="grade-assignment">
+                    <span class="icon">✏️</span>
+                    <span>Grade Assignment</span>
+                </a>
+                <a href="#" class="nav-item" data-section="students">
+                    <span class="icon">👥</span>
+                    <span>Students</span>
+                </a>
+                <a href="#" class="nav-item" data-section="reports">
+                    <span class="icon">📈</span>
+                    <span>Reports</span>
+                </a>
+                <a href="#" class="nav-item" data-section="profile">
+                    <span class="icon">👤</span>
+                    <span>Profile</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <span id="userGreeting" class="user-greeting"></span>
+                </div>
+            </header>
+
+            <!-- Content Sections -->
+            <div class="content-area">
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="section active">
+                    <div class="dashboard-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-content">
+                                <h3>Students</h3>
+                                <p class="stat-number">45</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📚</div>
+                            <div class="stat-content">
+                                <h3>Total Books</h3>
+                                <p class="stat-number">320</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">✏️</div>
+                            <div class="stat-content">
+                                <h3>Assignments</h3>
+                                <p class="stat-number">12</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-content">
+                                <h3>Avg. Score</h3>
+                                <p class="stat-number">87%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-rows">
+                        <div class="card">
+                            <h3>📋 Recent Assignments</h3>
+                            <div class="assignments-list">
+                                <div class="assignment-row">
+                                    <span>Book Review: The Great Gatsby</span>
+                                    <span class="status-badge completed">Graded</span>
+                                </div>
+                                <div class="assignment-row">
+                                    <span>Character Analysis: 1984</span>
+                                    <span class="status-badge pending">Pending Review</span>
+                                </div>
+                                <div class="assignment-row">
+                                    <span>Reading Summary: Sapiens</span>
+                                    <span class="status-badge pending">Pending Review</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>📈 Class Statistics</h3>
+                            <div class="stats-visual">
+                                <div class="stat-item">
+                                    <span>Books Borrowed</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 85%"></div>
+                                    </div>
+                                    <small>187 of 220 available</small>
+                                </div>
+                                <div class="stat-item">
+                                    <span>Assignments Completed</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 72%"></div>
+                                    </div>
+                                    <small>32 of 45 students</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Manage Books Section -->
+                <section id="manage-books" class="section">
+                    <div class="action-bar">
+                        <button class="btn-primary" onclick="alert('Add Book form would open')">+ Add New Book</button>
+                        <input type="text" placeholder="Search books..." class="search-input">
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>ISBN</th>
+                                <th>Copies Available</th>
+                                <th>Total Copies</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>The Great Gatsby</td>
+                                <td>F. Scott Fitzgerald</td>
+                                <td>978-0-7432-7356-5</td>
+                                <td>3</td>
+                                <td>8</td>
+                                <td>
+                                    <button class="btn-small">Edit</button>
+                                    <button class="btn-small btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>To Kill a Mockingbird</td>
+                                <td>Harper Lee</td>
+                                <td>978-0-06-112008-4</td>
+                                <td>5</td>
+                                <td>10</td>
+                                <td>
+                                    <button class="btn-small">Edit</button>
+                                    <button class="btn-small btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>1984</td>
+                                <td>George Orwell</td>
+                                <td>978-0-451-52493-2</td>
+                                <td>2</td>
+                                <td>6</td>
+                                <td>
+                                    <button class="btn-small">Edit</button>
+                                    <button class="btn-small btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Create Assignment Section -->
+                <section id="create-assignment" class="section">
+                    <form class="form-section">
+                        <h3>Create New Assignment</h3>
+                        <div class="form-group">
+                            <label>Assignment Title</label>
+                            <input type="text" placeholder="e.g., Book Review: The Great Gatsby" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea placeholder="Enter assignment description..." rows="4" required></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Related Book</label>
+                                <select required>
+                                    <option value="">Select a book</option>
+                                    <option value="gatsby">The Great Gatsby</option>
+                                    <option value="mockingbird">To Kill a Mockingbird</option>
+                                    <option value="1984">1984</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Due Date</label>
+                                <input type="date" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Assign To</label>
+                            <select required>
+                                <option value="">Select class/students</option>
+                                <option value="all">All Students</option>
+                                <option value="class-a">Class 10-A</option>
+                                <option value="class-b">Class 10-B</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary">Create Assignment</button>
+                    </form>
+                </section>
+
+                <!-- Grade Assignment Section -->
+                <section id="grade-assignment" class="section">
+                    <div class="action-bar">
+                        <select class="filter-select">
+                            <option value="">All Assignments</option>
+                            <option value="pending">Pending Review</option>
+                            <option value="graded">Graded</option>
+                        </select>
+                    </div>
+
+                    <div class="submissions-list">
+                        <div class="submission-card">
+                            <div class="submission-header">
+                                <h4>Book Review: The Great Gatsby</h4>
+                                <span class="student-name">Submitted by: John Doe</span>
+                            </div>
+                            <p class="submission-date">Submitted: Dec 9, 2025</p>
+                            <div class="submission-actions">
+                                <button class="btn-primary" onclick="alert('Would open grading interface')">Grade</button>
+                                <button class="btn-secondary">View Submission</button>
+                            </div>
+                        </div>
+                        <div class="submission-card">
+                            <div class="submission-header">
+                                <h4>Character Analysis: 1984</h4>
+                                <span class="student-name">Submitted by: Jane Smith</span>
+                            </div>
+                            <p class="submission-date">Submitted: Dec 15, 2025</p>
+                            <div class="submission-actions">
+                                <button class="btn-primary" onclick="alert('Would open grading interface')">Grade</button>
+                                <button class="btn-secondary">View Submission</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Students Section -->
+                <section id="students" class="section">
+                    <div class="action-bar">
+                        <input type="text" placeholder="Search students..." class="search-input">
+                        <select class="filter-select">
+                            <option value="">All Classes</option>
+                            <option value="10-a">Class 10-A</option>
+                            <option value="10-b">Class 10-B</option>
+                        </select>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Class</th>
+                                <th>Email</th>
+                                <th>Books Borrowed</th>
+                                <th>Assignments Done</th>
+                                <th>Avg Score</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>10-A</td>
+                                <td>john.doe@school.com</td>
+                                <td>5</td>
+                                <td>8/10</td>
+                                <td>87%</td>
+                                <td>
+                                    <button class="btn-small">View Profile</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Jane Smith</td>
+                                <td>10-A</td>
+                                <td>jane.smith@school.com</td>
+                                <td>3</td>
+                                <td>9/10</td>
+                                <td>92%</td>
+                                <td>
+                                    <button class="btn-small">View Profile</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Mike Johnson</td>
+                                <td>10-B</td>
+                                <td>mike.johnson@school.com</td>
+                                <td>7</td>
+                                <td>7/10</td>
+                                <td>81%</td>
+                                <td>
+                                    <button class="btn-small">View Profile</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Reports Section -->
+                <section id="reports" class="section">
+                    <div class="reports-grid">
+                        <div class="report-card">
+                            <h3>📊 Class Performance Report</h3>
+                            <p>Generate detailed performance analytics for your class</p>
+                            <button class="btn-primary" onclick="alert('Generating report...')">Generate Report</button>
+                        </div>
+                        <div class="report-card">
+                            <h3>📚 Book Usage Report</h3>
+                            <p>Track which books are most borrowed and popular</p>
+                            <button class="btn-primary" onclick="alert('Generating report...')">Generate Report</button>
+                        </div>
+                        <div class="report-card">
+                            <h3>✏️ Assignment Analytics</h3>
+                            <p>View detailed statistics on assignment submissions</p>
+                            <button class="btn-primary" onclick="alert('Generating report...')">Generate Report</button>
+                        </div>
+                        <div class="report-card">
+                            <h3>📈 Reading Progress Report</h3>
+                            <p>Monitor student reading habits and progress</p>
+                            <button class="btn-primary" onclick="alert('Generating report...')">Generate Report</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Profile Section -->
+                <section id="profile" class="section">
+                    <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar">👨‍🏫</div>
+                            <div class="profile-info">
+                                <h2 id="teacherName">Ms. Sarah Johnson</h2>
+                                <p id="teacherEmail">sarah.johnson@school.com</p>
+                                <p id="teacherDept">Department: English Literature</p>
+                            </div>
+                        </div>
+
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <span class="label">Classes</span>
+                                <span class="value">3</span>
+                            </div>
+                            <div class="stat">
+                                <span class="label">Total Students</span>
+                                <span class="value">120</span>
+                            </div>
+                            <div class="stat">
+                                <span class="label">Assignments Created</span>
+                                <span class="value">28</span>
+                            </div>
+                        </div>
+
+                        <div class="profile-preferences">
+                            <h3>Preferences</h3>
+                            <label>
+                                <input type="checkbox" checked>
+                                <span>Receive assignment submission notifications</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" checked>
+                                <span>Send reading reminders to students</span>
+                            </label>
+                            <label>
+                                <input type="checkbox">
+                                <span>Weekly performance reports</span>
+                            </label>
+                        </div>
+
+                        <button class="btn-edit">Edit Profile</button>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/teacher-dashboard.js"></script>
+</body>
+</html>

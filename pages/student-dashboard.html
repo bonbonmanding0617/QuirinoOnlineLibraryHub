@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Online Library Hub</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 15V50C10 52.2091 11.7909 54 14 54H46C48.2091 54 50 52.2091 50 50V15H10Z" stroke="#fff" stroke-width="2"/>
+                        <path d="M15 20H45" stroke="#fff" stroke-width="2"/>
+                        <path d="M15 28H45" stroke="#fff" stroke-width="2"/>
+                        <path d="M15 36H45" stroke="#fff" stroke-width="2"/>
+                        <path d="M15 44H45" stroke="#fff" stroke-width="2"/>
+                    </svg>
+                </div>
+                <h2>Library Hub</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-section="books">
+                    <span class="icon">📚</span>
+                    <span>Browse Books</span>
+                </a>
+                <a href="#" class="nav-item" data-section="my-books">
+                    <span class="icon">📖</span>
+                    <span>My Books</span>
+                </a>
+                <a href="#" class="nav-item" data-section="assignments">
+                    <span class="icon">✏️</span>
+                    <span>Assignments</span>
+                </a>
+                <a href="#" class="nav-item" data-section="profile">
+                    <span class="icon">👤</span>
+                    <span>Profile</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <span id="userGreeting" class="user-greeting"></span>
+                </div>
+            </header>
+
+            <!-- Content Sections -->
+            <div class="content-area">
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="section active">
+                    <div class="dashboard-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">📚</div>
+                            <div class="stat-content">
+                                <h3>Books Borrowed</h3>
+                                <p class="stat-number">5</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⏰</div>
+                            <div class="stat-content">
+                                <h3>Due Soon</h3>
+                                <p class="stat-number">2</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-content">
+                                <h3>Assignments Done</h3>
+                                <p class="stat-number">8</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📈</div>
+                            <div class="stat-content">
+                                <h3>Reading Progress</h3>
+                                <p class="stat-number">65%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-rows">
+                        <div class="card">
+                            <h3>📅 Recent Activity</h3>
+                            <ul class="activity-list">
+                                <li>Borrowed "The Great Gatsby" - Dec 10, 2025</li>
+                                <li>Completed assignment "Book Review" - Dec 9, 2025</li>
+                                <li>Returned "1984" - Dec 8, 2025</li>
+                                <li>Borrowed "To Kill a Mockingbird" - Dec 7, 2025</li>
+                                <li>Joined reading group "Classics Club" - Dec 6, 2025</li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h3>📖 Currently Reading</h3>
+                            <div class="book-list">
+                                <div class="book-item">
+                                    <div class="book-cover">📕</div>
+                                    <div class="book-info">
+                                        <h4>The Great Gatsby</h4>
+                                        <p>F. Scott Fitzgerald</p>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 45%"></div>
+                                        </div>
+                                        <small>45% completed</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Browse Books Section -->
+                <section id="books" class="section">
+                    <div class="search-bar">
+                        <input type="text" id="bookSearch" placeholder="Search books by title, author, or ISBN...">
+                        <select id="categoryFilter">
+                            <option value="">All Categories</option>
+                            <option value="fiction">Fiction</option>
+                            <option value="nonfiction">Non-Fiction</option>
+                            <option value="science">Science</option>
+                            <option value="history">History</option>
+                            <option value="biography">Biography</option>
+                        </select>
+                    </div>
+
+                    <div class="books-grid">
+                        <div class="book-card">
+                            <div class="book-cover">📕</div>
+                            <h4>The Great Gatsby</h4>
+                            <p class="author">F. Scott Fitzgerald</p>
+                            <p class="category">Fiction</p>
+                            <button class="btn-borrow">Borrow</button>
+                        </div>
+                        <div class="book-card">
+                            <div class="book-cover">📗</div>
+                            <h4>To Kill a Mockingbird</h4>
+                            <p class="author">Harper Lee</p>
+                            <p class="category">Fiction</p>
+                            <button class="btn-borrow">Borrow</button>
+                        </div>
+                        <div class="book-card">
+                            <div class="book-cover">📘</div>
+                            <h4>1984</h4>
+                            <p class="author">George Orwell</p>
+                            <p class="category">Fiction</p>
+                            <button class="btn-borrow">Borrow</button>
+                        </div>
+                        <div class="book-card">
+                            <div class="book-cover">📙</div>
+                            <h4>Sapiens</h4>
+                            <p class="author">Yuval Noah Harari</p>
+                            <p class="category">Non-Fiction</p>
+                            <button class="btn-borrow">Borrow</button>
+                        </div>
+                        <div class="book-card">
+                            <div class="book-cover">📕</div>
+                            <h4>Educated</h4>
+                            <p class="author">Tara Westover</p>
+                            <p class="category">Biography</p>
+                            <button class="btn-borrow">Borrow</button>
+                        </div>
+                        <div class="book-card">
+                            <div class="book-cover">📗</div>
+                            <h4>Brief History of Time</h4>
+                            <p class="author">Stephen Hawking</p>
+                            <p class="category">Science</p>
+                            <button class="btn-borrow">Borrow</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- My Books Section -->
+                <section id="my-books" class="section">
+                    <div class="filter-tabs">
+                        <button class="tab-btn active" data-filter="borrowed">Borrowed</button>
+                        <button class="tab-btn" data-filter="completed">Completed</button>
+                        <button class="tab-btn" data-filter="wishlist">Wishlist</button>
+                    </div>
+
+                    <div class="books-list">
+                        <div class="book-list-item">
+                            <div class="book-cover-small">📕</div>
+                            <div class="book-details">
+                                <h4>The Great Gatsby</h4>
+                                <p>F. Scott Fitzgerald</p>
+                                <small>Due: Dec 25, 2025</small>
+                            </div>
+                            <button class="btn-return">Return</button>
+                        </div>
+                        <div class="book-list-item">
+                            <div class="book-cover-small">📗</div>
+                            <div class="book-details">
+                                <h4>To Kill a Mockingbird</h4>
+                                <p>Harper Lee</p>
+                                <small>Due: Dec 28, 2025</small>
+                            </div>
+                            <button class="btn-return">Return</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Assignments Section -->
+                <section id="assignments" class="section">
+                    <div class="assignments-grid">
+                        <div class="assignment-card">
+                            <div class="assignment-status completed">✓</div>
+                            <h4>Book Review: The Great Gatsby</h4>
+                            <p class="teacher">Assigned by: Mr. Smith</p>
+                            <p class="due-date">Due: Dec 10, 2025</p>
+                            <div class="score-badge">95/100</div>
+                        </div>
+                        <div class="assignment-card">
+                            <div class="assignment-status pending">!</div>
+                            <h4>Character Analysis: 1984</h4>
+                            <p class="teacher">Assigned by: Ms. Johnson</p>
+                            <p class="due-date">Due: Dec 20, 2025</p>
+                            <button class="btn-submit">Submit</button>
+                        </div>
+                        <div class="assignment-card">
+                            <div class="assignment-status pending">!</div>
+                            <h4>Reading Summary: Sapiens</h4>
+                            <p class="teacher">Assigned by: Dr. Brown</p>
+                            <p class="due-date">Due: Dec 22, 2025</p>
+                            <button class="btn-submit">Submit</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Profile Section -->
+                <section id="profile" class="section">
+                    <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar">👨‍🎓</div>
+                            <div class="profile-info">
+                                <h2 id="studentName">John Doe</h2>
+                                <p id="studentEmail">john.doe@school.com</p>
+                                <p id="studentClass">Class: 10-A</p>
+                            </div>
+                        </div>
+
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <span class="label">Books Read</span>
+                                <span class="value">24</span>
+                            </div>
+                            <div class="stat">
+                                <span class="label">Reading Points</span>
+                                <span class="value">2,450</span>
+                            </div>
+                            <div class="stat">
+                                <span class="label">Assignments Done</span>
+                                <span class="value">18</span>
+                            </div>
+                        </div>
+
+                        <div class="profile-preferences">
+                            <h3>Preferences</h3>
+                            <label>
+                                <input type="checkbox" checked>
+                                <span>Receive assignment notifications</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" checked>
+                                <span>Receive book return reminders</span>
+                            </label>
+                            <label>
+                                <input type="checkbox">
+                                <span>Receive reading recommendations</span>
+                            </label>
+                        </div>
+
+                        <button class="btn-edit">Edit Profile</button>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/student-dashboard.js"></script>
+</body>
+</html>
