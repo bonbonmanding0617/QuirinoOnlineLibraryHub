@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin — Activity Log</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:18px;color:#222}
+    header{display:flex;align-items:center;justify-content:space-between}
+    .controls{display:flex;gap:8px;align-items:center;margin:12px 0}
+    input,select,button{padding:6px 8px;font-size:14px}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{border:1px solid #ddd;padding:6px;font-size:13px;text-align:left}
+    th{background:#f6f6f6}
+    .muted{color:#666;font-size:13px}
+    .error{color:#b00020}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Activity Log</h1>
+    <div class="muted">Admin view</div>
+  </header>
+
+  <p class="muted">This page fetches protected admin logs. Provide your admin API key below (kept in memory only).</p>
+
+  <div class="controls">
+    <input id="apiKey" placeholder="ADMIN_API_KEY (or leave blank to enter Bearer)" style="min-width:320px" />
+    <input id="actionFilter" placeholder="Action (e.g. delete_user)" />
+    <select id="limit">
+      <option value="20">20</option>
+      <option value="50" selected>50</option>
+      <option value="100">100</option>
+      <option value="250">250</option>
+    </select>
+    <button id="btnFetch">Fetch</button>
+    <button id="btnPrev">Prev</button>
+    <button id="btnNext">Next</button>
+    <button id="btnCsv">Export CSV</button>
+    <button id="btnClear">Clear</button>
+  </div>
+
+  <div id="status" class="muted"></div>
+  <div id="error" class="error"></div>
+
+  <table id="results">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Time</th>
+        <th>User</th>
+        <th>Action</th>
+        <th>Resource</th>
+        <th>Resource ID</th>
+        <th>Admin IP</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const btn = document.getElementById('btnFetch');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const btnCsv = document.getElementById('btnCsv');
+    const btnClear = document.getElementById('btnClear');
+    const apiKeyInput = document.getElementById('apiKey');
+    const actionInput = document.getElementById('actionFilter');
+    const limitInput = document.getElementById('limit');
+    const status = document.getElementById('status');
+    const errorEl = document.getElementById('error');
+    const tbody = document.querySelector('#results tbody');
+    let currentOffset = 0;
+    let lastRows = [];
+
+    function setStatus(msg){ status.textContent = msg }
+    function setError(msg){ errorEl.textContent = msg }
+    function clearTable(){ tbody.innerHTML = '' }
+
+    async function fetchLogs(offset = 0){
+      setError('');
+      clearTable();
+      const action = actionInput.value.trim();
+      const limit = limitInput.value;
+      const apiKey = apiKeyInput.value.trim();
+      let url = `/api/admin/activity-log?limit=${encodeURIComponent(limit)}&offset=${encodeURIComponent(offset)}`;
+      if (action) url += `&action=${encodeURIComponent(action)}`;
+
+      setStatus('Fetching...');
+      try {
+        const headers = {};
+        if (apiKey) headers['x-api-key'] = apiKey;
+        const res = await fetch(url, {headers});
+        const json = await res.json().catch(()=>null);
+        if (!res.ok){
+          setError((json && json.error) ? JSON.stringify(json) : `HTTP ${res.status}`);
+          setStatus('');
+          return;
+        }
+        currentOffset = json.offset || 0;
+        lastRows = json.rows || [];
+        setStatus(`Loaded ${json.count} rows (offset ${currentOffset})`);
+        for (const r of json.rows){
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${r.id}</td>
+            <td>${new Date(r.created_at).toLocaleString()}</td>
+            <td>${r.user_id || ''}</td>
+            <td>${r.action || ''}</td>
+            <td>${r.resource_type || ''}</td>
+            <td>${r.resource_id || ''}</td>
+            <td>${r.admin_ip || ''}</td>
+            <td>${(r.description||'').replace(/</g,'&lt;')}</td>
+          `;
+          tbody.appendChild(tr);
+        }
+      } catch (err){
+        setError(err.message || String(err));
+      }
+    }
+
+    btn.addEventListener('click', ()=>fetchLogs(0));
+    btnPrev.addEventListener('click', ()=>{
+      const limit = parseInt(limitInput.value,10)||50;
+      const prev = Math.max(0, currentOffset - limit);
+      fetchLogs(prev);
+    });
+    btnNext.addEventListener('click', ()=>{
+      const limit = parseInt(limitInput.value,10)||50;
+      fetchLogs(currentOffset + limit);
+    });
+    btnCsv.addEventListener('click', ()=>{
+      if (!lastRows || lastRows.length===0) return setError('No rows to export');
+      const cols = ['id','created_at','user_id','action','resource_type','resource_id','admin_ip','description'];
+      const csv = [cols.join(',')].concat(lastRows.map(r=>cols.map(c=>`"${String(r[c]||'').replace(/"/g,'""')}"`).join(','))).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `activity_log_offset_${currentOffset}.csv`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    btnClear.addEventListener('click', ()=>{ apiKeyInput.value=''; actionInput.value=''; clearTable(); setStatus(''); setError(''); lastRows = []; currentOffset = 0; });
+
+    // allow Enter to fetch
+    [apiKeyInput, actionInput, limitInput].forEach(el=>el.addEventListener('keydown', (e)=>{ if (e.key==='Enter') fetchLogs() }));
+  </script>
+</body>
+</html>

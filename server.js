@@ -74,7 +74,7 @@ app.post('/api/users', async (req, res) => {
         });
 
         const userId = insert.insertId;
-        await logActivity(userId, 'create_user', `User ${email} created`, 'user', userId);
+        await logActivity(userId, 'create_user', `User ${email} created`, 'user', userId, req.admin && req.admin.ip);
 
         const user = await db.getOne('SELECT id, name, email, role, profile_picture, created_at FROM users WHERE id = ?', [userId]);
         res.status(201).json({ user });
@@ -92,7 +92,7 @@ app.put('/api/users/:id/profile-picture', upload.single('profile'), async (req, 
 
         const relPath = path.join('uploads', path.basename(req.file.path)).replace(/\\/g, '/');
         await db.update('users', { profile_picture: relPath }, 'id = ?', [userId]);
-        await logActivity(userId, 'update_profile_picture', `Updated profile picture`, 'user', userId);
+        await logActivity(userId, 'update_profile_picture', `Updated profile picture`, 'user', userId, req.admin && req.admin.ip);
 
         res.json({ ok: true, profile_picture: relPath });
     } catch (err) {
@@ -119,7 +119,7 @@ app.post('/api/books', upload.single('cover'), async (req, res) => {
         });
 
         const bookId = insert.insertId;
-        await logActivity(created_by || null, 'create_book', `Created book ${title}`, 'book', bookId);
+        await logActivity(created_by || null, 'create_book', `Created book ${title}`, 'book', bookId, req.admin && req.admin.ip);
 
         const book = await db.getOne('SELECT * FROM books WHERE id = ?', [bookId]);
         res.status(201).json({ book });
@@ -220,7 +220,7 @@ app.put('/api/users/:id', async (req, res) => {
         if (Object.keys(data).length === 0) return res.status(400).json({ error: 'no_fields' });
 
         await db.update('users', data, 'id = ?', [userId]);
-        await logActivity(userId, 'update_user', `Updated profile`, 'user', userId);
+        await logActivity(userId, 'update_user', `Updated profile`, 'user', userId, req.admin && req.admin.ip);
 
         const user = await db.getOne('SELECT id, name, email, phone, address, school, department, specialization, bio, profile_picture, status, created_at FROM users WHERE id = ?', [userId]);
         res.json({ user });
@@ -238,6 +238,33 @@ app.get('/api/borrowings/summary', async (req, res) => {
         res.json({ days: sinceDays, totalBorrowings: rows.total });
     } catch (err) {
         console.error(err);
+        res.status(500).json({ error: 'server_error' });
+    }
+});
+
+// Admin: view recent activity_log entries (protected)
+app.get('/api/admin/activity-log', requireApiKey, async (req, res) => {
+    try {
+        let limit = parseInt(req.query.limit || '50', 10);
+        if (isNaN(limit) || limit <= 0 || limit > 1000) limit = 50;
+        const actionFilter = req.query.action;
+
+        let sql = 'SELECT id, user_id, action, description, resource_type, resource_id, admin_ip, created_at FROM activity_log';
+        const params = [];
+        if (actionFilter) {
+            sql += ' WHERE action = ?';
+            params.push(actionFilter);
+        }
+
+        const offset = Math.max(0, parseInt(req.query.offset || '0', 10) || 0);
+        sql += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+        params.push(limit, offset);
+
+        const rows = await db.getAll(sql, params);
+        // include offset in response for client-side pagination
+        res.json({ ok: true, count: rows.length, offset, rows });
+    } catch (err) {
+        console.error('Failed to fetch activity_log:', err.message || err);
         res.status(500).json({ error: 'server_error' });
     }
 });
