@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile - Quirino Library Hub</title>
+    <title>Student Profile - Pedlisan Online Library Hub</title>
     <style>
         * {
             margin: 0;
@@ -13,218 +13,153 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0f2f5;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #333;
+            min-height: 100vh;
+            padding: 20px;
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 600px;
             margin: 0 auto;
-            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
-        header {
+        .header {
             background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%);
             color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            font-size: 28px;
-        }
-
-        .back-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid white;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-        }
-
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .profile-container {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 30px;
-        }
-
-        .profile-sidebar {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px 20px;
             text-align: center;
         }
 
-        .profile-pic {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 60px;
-            overflow: hidden;
-            border: 3px solid #8B3A3A;
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
         }
 
-        .profile-pic img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .upload-pic-btn {
-            display: inline-block;
-            background: #8B3A3A;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
+        .header p {
+            opacity: 0.9;
             font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s;
-            margin-bottom: 20px;
-            border: none;
         }
 
-        .upload-pic-btn:hover {
-            background: #5C2E2E;
+        .content {
+            padding: 30px 20px;
         }
 
-        .upload-pic-input {
-            display: none;
+        .profile-section {
+            margin-bottom: 30px;
         }
 
-        .profile-info {
-            text-align: left;
-            border-top: 1px solid #eee;
-            padding-top: 20px;
-        }
-
-        .info-item {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .info-label {
-            font-size: 12px;
-            color: #999;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .info-value {
-            font-size: 14px;
-            color: #333;
-            margin-top: 5px;
-            font-weight: 600;
-        }
-
-        .logout-btn {
-            width: 100%;
-            background: #EF4444;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-top: 20px;
-            transition: all 0.3s;
-        }
-
-        .logout-btn:hover {
-            background: #B84040;
-        }
-
-        .profile-content {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .section {
-            margin-bottom: 40px;
-        }
-
-        .section h2 {
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
             color: #8B3A3A;
-            margin-bottom: 25px;
-            font-size: 20px;
-            border-bottom: 2px solid #8B3A3A;
+            margin-bottom: 15px;
             padding-bottom: 10px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            border-bottom: 2px solid #8B3A3A;
         }
 
         .form-group {
-            display: flex;
-            flex-direction: column;
+            margin-bottom: 20px;
         }
 
         .form-group label {
+            display: block;
             font-weight: 600;
-            margin-bottom: 8px;
-            color: #333;
+            color: #555;
+            margin-bottom: 6px;
             font-size: 14px;
         }
 
-        .form-group input[type="text"],
-        .form-group input[type="email"],
-        .form-group select {
-            padding: 10px;
-            border: 1px solid #ddd;
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
             border-radius: 6px;
             font-size: 14px;
-        }
-
-        .form-group input:disabled {
-            background: #f5f5f5;
-            color: #999;
-            cursor: not-allowed;
+            font-family: inherit;
+            transition: border-color 0.3s;
         }
 
         .form-group input:focus,
-        .form-group select:focus {
+        .form-group select:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: #8B3A3A;
             box-shadow: 0 0 0 3px rgba(139, 58, 58, 0.1);
         }
 
+        .form-group input[readonly],
+        .form-group select[readonly] {
+            background: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        .read-only-field {
+            background: #f5f5f5;
+            padding: 10px 12px;
+            border-radius: 6px;
+            color: #666;
+            border: 2px solid #e0e0e0;
+            font-size: 14px;
+        }
+
+        .profile-pic-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #8B3A3A;
+            margin-bottom: 15px;
+            background: #f0f0f0;
+            display: inline-block;
+        }
+
+        .pic-placeholder {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #8B3A3A;
+            margin-bottom: 15px;
+            background: #f0f0f0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #999;
+        }
+
         .button-group {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 10px 20px;
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 14px;
             font-weight: 600;
+            font-size: 14px;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .btn-primary {
@@ -234,343 +169,641 @@
 
         .btn-primary:hover {
             background: #5C2E2E;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 58, 58, 0.3);
         }
 
         .btn-secondary {
-            background: #f0f2f5;
+            background: #f0f0f0;
             color: #333;
             border: 1px solid #ddd;
         }
 
         .btn-secondary:hover {
-            background: #F0E8E8;
+            background: #e0e0e0;
+        }
+
+        .btn-danger {
+            background: #EF4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #DC2626;
+            transform: translateY(-2px);
+        }
+
+        .edit-mode .form-group input:not([readonly]),
+        .edit-mode .form-group select,
+        .edit-mode .form-group textarea {
+            background: #fafafa;
+            border-color: #8B3A3A;
+        }
+
+        .read-only-label {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
         }
 
         .alert {
-            padding: 12px;
+            padding: 15px;
             border-radius: 6px;
             margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
         }
 
         .alert-success {
-            background: #FDF2F2;
-            color: #8B3A3A;
-            border: 1px solid #D97070;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
 
         .alert-error {
-            background: #FDF2F2;
-            color: #5C2E2E;
-            border: 1px solid #D97070;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
-        .school-id-note {
-            background: #f0f2f5;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 12px;
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #8B3A3A;
+            margin-bottom: 10px;
+        }
+
+        .modal-message {
             color: #666;
-            margin-top: 5px;
+            margin-bottom: 20px;
         }
 
-        .read-only-field {
-            background: #f9fafb;
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
             padding: 10px;
+            border: none;
             border-radius: 6px;
-            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            font-weight: 600;
         }
 
-        @media (max-width: 768px) {
-            .profile-container {
-                grid-template-columns: 1fr;
+        .modal-btn-yes {
+            background: #8B3A3A;
+            color: white;
+        }
+
+        .modal-btn-no {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 10px 12px;
+            background: #f0f0f0;
+            border: 2px dashed #8B3A3A;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            color: #8B3A3A;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .file-input-label:hover {
+            background: #e8e8e8;
+        }
+
+        .edit-btn-text {
+            display: none;
+        }
+
+        .mode-edit .edit-btn-text {
+            display: inline;
+        }
+
+        .mode-edit .view-btn-text {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
             }
 
-            header {
+            .header {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+
+            .button-group {
                 flex-direction: column;
-                gap: 15px;
             }
 
-            .form-grid {
-                grid-template-columns: 1fr;
+            .btn {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
-        <header>
-            <h1>👤 My Profile</h1>
-            <a href="student-dashboard.html" class="back-btn">← Back to Dashboard</a>
-        </header>
+        <div class="header">
+            <h1>👤 Student Profile</h1>
+            <p id="userEmail">student@school.com</p>
+        </div>
 
-        <div class="profile-container">
-            <!-- Sidebar -->
-            <div class="profile-sidebar">
-                <div class="profile-pic" id="profilePicDisplay">👤</div>
-                
-                <button class="upload-pic-btn" onclick="document.getElementById('profilePicInput').click()">
-                    📷 Change Photo
-                </button>
-                <input 
-                    type="file" 
-                    id="profilePicInput" 
-                    class="upload-pic-input" 
-                    accept="image/*"
-                    onchange="handleProfilePicUpload(event)"
-                >
+        <div class="content">
+            <div id="alertContainer"></div>
 
-                <div class="profile-info">
-                    <div class="info-item">
-                        <div class="info-label">School</div>
-                        <div class="info-value" id="schoolDisplay">-</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Grade Level</div>
-                        <div class="info-value" id="gradeDisplay">-</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Member Since</div>
-                        <div class="info-value" id="memberSinceDisplay">-</div>
-                    </div>
+            <!-- Profile Picture Section -->
+            <div class="profile-pic-section">
+                <div id="picContainer">
+                    <img id="profilePic" class="profile-pic" style="display: none;" alt="Profile Picture">
+                    <div id="picPlaceholder" class="pic-placeholder">📷</div>
                 </div>
-
-                <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+                <div id="picUploadSection" style="display: none;">
+                    <div class="file-input-wrapper">
+                        <input type="file" id="profilePicInput" accept="image/*">
+                        <label class="file-input-label" for="profilePicInput">📁 Click to upload profile picture</label>
+                    </div>
+                    <p class="read-only-label">Supported formats: JPG, PNG (Max 5MB)</p>
+                </div>
             </div>
 
-            <!-- Main Content -->
-            <div class="profile-content">
-                <div id="alertContainer"></div>
-
-                <!-- Personal Information Section -->
-                <div class="section">
-                    <h2>Personal Information</h2>
-                    <form id="profileForm">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="firstName">First Name</label>
-                                <input type="text" id="firstName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="lastName">Last Name</label>
-                                <input type="text" id="lastName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email Address</label>
-                                <input type="email" id="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="schoolId">School ID</label>
-                                <input type="text" id="schoolId" disabled>
-                                <div class="school-id-note">
-                                    ℹ️ Your School ID cannot be changed
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="school">School/Institution</label>
-                                <select id="school" required>
-                                    <option value="">Select your school</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="gradeLevel">Grade Level</label>
-                                <input type="text" id="gradeLevel" placeholder="e.g., 10-A" required>
-                            </div>
-                        </div>
-
-                        <div class="button-group">
-                            <button type="submit" class="btn btn-primary">💾 Save Changes</button>
-                            <button type="button" class="btn btn-secondary" onclick="resetForm()">↻ Reset</button>
-                        </div>
-                    </form>
+            <!-- Personal Information -->
+            <div class="profile-section">
+                <h2 class="section-title">Personal Information</h2>
+                
+                <div class="form-group">
+                    <label for="userId">Student ID *</label>
+                    <div class="read-only-field" id="userId">STU-001</div>
+                    <p class="read-only-label">⚠️ ID cannot be changed</p>
                 </div>
 
+                <div class="form-group">
+                    <label for="firstName">First Name *</label>
+                    <input type="text" id="firstName" placeholder="Enter first name" readonly>
+                </div>
 
+                <div class="form-group">
+                    <label for="lastName">Last Name *</label>
+                    <input type="text" id="lastName" placeholder="Enter last name" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" placeholder="Enter email" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" placeholder="Enter phone number" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" placeholder="Enter address" readonly>
+                </div>
+            </div>
+
+            <!-- Academic Information -->
+            <div class="profile-section">
+                <h2 class="section-title">Academic Information</h2>
+
+                <div class="form-group">
+                    <label for="school">School/Institution *</label>
+                    <input type="text" id="school" placeholder="Enter school name" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="class">Class/Grade *</label>
+                    <input type="text" id="class" placeholder="Enter class or grade" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Account Status</label>
+                    <input type="text" id="status" placeholder="Status" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="joinDate">Join Date</label>
+                    <input type="text" id="joinDate" placeholder="Join date" readonly>
+                </div>
+            </div>
+
+            <!-- Account Settings -->
+            <div class="profile-section">
+                <h2 class="section-title">Account Settings</h2>
+
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" placeholder="Enter new password" readonly>
+                    <p class="read-only-label">Leave blank to keep current password</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm password" readonly>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button class="btn btn-primary" id="editBtn" onclick="enableEditMode()">
+                    <span class="view-btn-text">✏️ Edit Profile</span>
+                    <span class="edit-btn-text">💾 Save Changes</span>
+                </button>
+                <button class="btn btn-secondary" id="cancelBtn" onclick="disableEditMode()" style="display: none;">
+                    ❌ Cancel
+                </button>
+                <button class="btn btn-secondary" onclick="goHome()">
+                    🏠 Back to Home
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">⚠️</div>
+            <div class="modal-title">Confirm Save</div>
+            <div class="modal-message" id="confirmMessage">Are you sure you want to save changes?</div>
+            <div class="modal-buttons">
+                <button class="modal-btn-yes" onclick="confirmSave()">Yes, Save</button>
+                <button class="modal-btn-no" onclick="cancelConfirm()">No, Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Storage Manager -->
     <script src="../js/data-storage.js"></script>
+
     <script>
-        // Load user profile on page load
+        let isEditMode = false;
+        let originalData = {};
+        const editableFields = ['firstName', 'lastName', 'email', 'phone', 'address', 'school', 'class', 'password', 'confirmPassword'];
+        const readOnlyFields = ['userId', 'status', 'joinDate'];
+
+        // Load profile on page load
         document.addEventListener('DOMContentLoaded', () => {
-            // Try to get current user from storageManager or sessionStorage
-            const currentUser = storageManager.getCurrentUser();
-            const userData = currentUser || JSON.parse(sessionStorage.getItem('userData') || '{}');
-            
-            if (!userData.id && !userData.email) {
-                alert('Please login first');
+            loadProfile();
+            setupProfilePicUpload();
+        });
+
+        function loadProfile() {
+            const user = storageManager.getCurrentUser();
+            if (!user || user.role !== 'student') {
+                alert('Access Denied. Student access required.');
                 window.location.href = '../index.html';
                 return;
             }
 
-            loadProfile();
-            loadSchools();
-        });
+            // Load user data
+            document.getElementById('userId').textContent = user.id || 'STU-000';
+            document.getElementById('firstName').value = user.first_name || '';
+            document.getElementById('lastName').value = user.last_name || '';
+            document.getElementById('email').value = user.email || '';
+            document.getElementById('userEmail').textContent = user.email || '';
+            document.getElementById('phone').value = user.phone || '';
+            document.getElementById('address').value = user.address || '';
+            document.getElementById('school').value = user.school || '';
+            document.getElementById('class').value = user.class || '';
+            document.getElementById('status').value = user.status || 'active';
+            document.getElementById('joinDate').value = formatDate(user.joinDate) || '';
 
-        function loadProfile() {
-            // Get current user from storageManager or sessionStorage
-            let userData = storageManager.getCurrentUser();
-            if (!userData) {
-                userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+            // Load profile picture
+            if (user.profilePic) {
+                const img = document.getElementById('profilePic');
+                img.src = user.profilePic;
+                img.style.display = 'inline-block';
+                document.getElementById('picPlaceholder').style.display = 'none';
             }
-            
-            // Load basic info
-            document.getElementById('firstName').value = userData.first_name || '';
-            document.getElementById('lastName').value = userData.last_name || '';
-            document.getElementById('email').value = userData.email || '';
-            document.getElementById('schoolId').value = userData.school_id || userData.id || 'STU-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-            document.getElementById('school').value = userData.school || '';
-            document.getElementById('gradeLevel').value = userData.class || userData.department || '';
 
-            // Load sidebar info
-            document.getElementById('schoolDisplay').textContent = userData.school || 'Not assigned';
-            document.getElementById('gradeDisplay').textContent = userData.class || userData.department || 'Not assigned';
-            document.getElementById('memberSinceDisplay').textContent = userData.joinDate ? new Date(userData.joinDate).toLocaleDateString() : new Date().toLocaleDateString();
-
-            // Load profile picture if exists
-            if (userData.profilePic) {
-                document.getElementById('profilePicDisplay').innerHTML = `<img src="${userData.profilePic}" alt="Profile">`;
-            }
+            // Store original data for cancel functionality
+            saveOriginalData();
         }
 
-        function loadSchools() {
-            // Mock schools data - replace with API call
-            const schools = [
-                { id: 1, name: 'Lincoln High School' },
-                { id: 2, name: 'Central Academy' },
-                { id: 3, name: 'Riverside University' },
-                { id: 4, name: 'North Star Institute' },
-                { id: 5, name: 'Merit College' }
-            ];
-
-            const schoolSelect = document.getElementById('school');
-            schools.forEach(school => {
-                const option = document.createElement('option');
-                option.value = school.id;
-                option.textContent = school.name;
-                schoolSelect.appendChild(option);
+        function saveOriginalData() {
+            editableFields.forEach(field => {
+                originalData[field] = document.getElementById(field).value;
             });
         }
 
-        function handleProfilePicUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            // Validate file size (max 5MB)
-            if (file.size > 5 * 1024 * 1024) {
-                showAlert('File size must be less than 5MB', 'error');
+        function enableEditMode() {
+            if (isEditMode) {
+                // Save mode
+                saveProfile();
                 return;
             }
 
-            // Validate file type
-            if (!file.type.startsWith('image/')) {
-                showAlert('Please select an image file', 'error');
-                return;
-            }
+            isEditMode = true;
+            editableFields.forEach(field => {
+                const input = document.getElementById(field);
+                input.removeAttribute('readonly');
+            });
 
-            // Read and display image
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const profilePicData = e.target.result;
-                
-                // Get current user
-                let userData = storageManager.getCurrentUser();
-                if (!userData) {
-                    userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
-                }
-                
-                // Save profile picture to permanent storage
-                userData.profilePic = profilePicData;
-                storageManager.updateUser(userData);
-                sessionStorage.setItem('userData', JSON.stringify(userData));
-                
-                document.getElementById('profilePicDisplay').innerHTML = `<img src="${profilePicData}" alt="Profile">`;
-                showAlert('✅ Profile picture updated successfully!', 'success');
-            };
-            reader.readAsDataURL(file);
+            document.getElementById('editBtn').classList.add('mode-edit');
+            document.getElementById('cancelBtn').style.display = 'flex';
+            document.getElementById('picUploadSection').style.display = 'block';
+
+            showAlert('Edit mode enabled. Make your changes and click Save.', 'info');
         }
 
-        document.getElementById('profileForm').addEventListener('submit', (e) => {
-            e.preventDefault();
+        function disableEditMode() {
+            isEditMode = false;
+            editableFields.forEach(field => {
+                const input = document.getElementById(field);
+                input.setAttribute('readonly', '');
+                input.value = originalData[field];
+            });
 
-            // Get current user from storageManager or sessionStorage
-            let userData = storageManager.getCurrentUser();
-            if (!userData) {
-                userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
-            }
-            
-            // Update user data
-            userData.first_name = document.getElementById('firstName').value;
-            userData.last_name = document.getElementById('lastName').value;
-            userData.email = document.getElementById('email').value;
-            userData.school = document.getElementById('school').options[document.getElementById('school').selectedIndex].text;
-            userData.class = document.getElementById('gradeLevel').value;
+            document.getElementById('editBtn').classList.remove('mode-edit');
+            document.getElementById('cancelBtn').style.display = 'none';
+            document.getElementById('picUploadSection').style.display = 'none';
 
-            // Save to permanent storage
-            storageManager.updateUser(userData);
-            sessionStorage.setItem('userData', JSON.stringify(userData));
-            showAlert('✅ Profile updated successfully!', 'success');
-            
-            // Reload to reflect changes
-            setTimeout(() => {
-                location.reload();
-            }, 1500);
-        });
+            showAlert('Changes cancelled. Reverted to previous data.', 'info');
+        }
 
-        function changePassword() {
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
+        function saveProfile() {
+            // Validation
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
-            if (!currentPassword || !newPassword || !confirmPassword) {
-                showAlert('Please fill in all password fields', 'error');
+            if (!firstName || !lastName) {
+                showAlert('First name and last name are required', 'error');
                 return;
             }
 
-            if (newPassword.length < 6) {
-                showAlert('New password must be at least 6 characters', 'error');
+            if (!email || !email.includes('@')) {
+                showAlert('Please enter a valid email address', 'error');
                 return;
             }
 
-            if (newPassword !== confirmPassword) {
+            // Check password match if password is being changed
+            if (password && password !== confirmPassword) {
                 showAlert('Passwords do not match', 'error');
                 return;
             }
 
-            // TODO: Send to API to verify current password and update
-            showAlert('Password changed successfully! (Demo Mode)', 'success');
-            document.getElementById('currentPassword').value = '';
-            document.getElementById('newPassword').value = '';
-            document.getElementById('confirmPassword').value = '';
-        }
-
-        function resetForm() {
-            loadProfile();
-            showAlert('Form reset to original values', 'info');
-        }
-
-        function showAlert(message, type) {
-            const alertContainer = document.getElementById('alertContainer');
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type}`;
-            alertDiv.textContent = message;
-            
-            alertContainer.innerHTML = '';
-            alertContainer.appendChild(alertDiv);
-
-            setTimeout(() => {
-                alertDiv.remove();
-            }, 4000);
-        }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                storageManager.clearCurrentUser();
-                window.location.href = '../index.html';
+            if (password && password.length < 6) {
+                showAlert('Password must be at least 6 characters', 'error');
+                return;
             }
+
+            // Show confirmation modal
+            document.getElementById('confirmModal').classList.add('show');
+        }
+
+        function confirmSave() {
+            document.getElementById('confirmModal').classList.remove('show');
+
+            const user = storageManager.getCurrentUser();
+            const updatedUser = {
+                ...user,
+                first_name: document.getElementById('firstName').value.trim(),
+                last_name: document.getElementById('lastName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                address: document.getElementById('address').value.trim(),
+                school: document.getElementById('school').value.trim(),
+                class: document.getElementById('class').value.trim(),
+                status: document.getElementById('status').value || 'active'
+            };
+
+            const newPassword = document.getElementById('password').value;
+            if (newPassword) {
+                updatedUser.password = newPassword;
+            }
+
+            // Layer 1: Update localStorage (primary persistent storage)
+            const allUsers = storageManager.getAllUsers();
+            const userIndex = allUsers.findIndex(u => u.id === user.id);
+            if (userIndex !== -1) {
+                allUsers[userIndex] = updatedUser;
+                localStorage.setItem('POLIS_users', JSON.stringify(allUsers));
+                console.log('✅ Layer 1 - localStorage updated:', updatedUser);
+            }
+
+            // Layer 2: Update storageManager (system data manager)
+            storageManager.updateUser(updatedUser);
+            console.log('✅ Layer 2 - storageManager.updateUser() executed');
+
+            // Layer 3: Update current session user
+            storageManager.setCurrentUser(updatedUser);
+            console.log('✅ Layer 3 - storageManager.setCurrentUser() executed');
+
+            // Layer 4: Update sessionStorage (temporary session data)
+            sessionStorage.setItem('userData', JSON.stringify(updatedUser));
+            sessionStorage.setItem('POLIS_currentUser', JSON.stringify(updatedUser));
+            console.log('✅ Layer 4 - sessionStorage updated:', updatedUser);
+
+            // Verify all storage layers
+            verifyStorageLayers(updatedUser);
+
+            isEditMode = false;
+            editableFields.forEach(field => {
+                const input = document.getElementById(field);
+                input.setAttribute('readonly', '');
+            });
+
+            document.getElementById('editBtn').classList.remove('mode-edit');
+            document.getElementById('cancelBtn').style.display = 'none';
+            document.getElementById('picUploadSection').style.display = 'none';
+            document.getElementById('password').value = '';
+            document.getElementById('confirmPassword').value = '';
+
+            // Reload to show updated data
+            loadProfile();
+            saveOriginalData();
+            showAlert('✅ Profile updated successfully across all storage layers!', 'success');
+        }
+
+        function verifyStorageLayers(userData) {
+            console.log('=== Verifying All Storage Layers ===');
+            
+            // Check localStorage
+            const lsUsers = JSON.parse(localStorage.getItem('POLIS_users') || '[]');
+            const lsUser = lsUsers.find(u => u.id === userData.id);
+            console.log('Layer 1 (localStorage):', lsUser ? '✅ Data found' : '❌ Data missing', lsUser);
+            
+            // Check storageManager
+            const smUser = storageManager.getUserById(userData.id);
+            console.log('Layer 2 (storageManager):', smUser ? '✅ Data found' : '❌ Data missing', smUser);
+            
+            // Check currentUser
+            const cuUser = storageManager.getCurrentUser();
+            console.log('Layer 3 (currentUser):', cuUser && cuUser.id === userData.id ? '✅ Data found' : '❌ Data missing', cuUser);
+            
+            // Check sessionStorage
+            const ssUser = JSON.parse(sessionStorage.getItem('userData') || '{}');
+            console.log('Layer 4 (sessionStorage):', ssUser.id ? '✅ Data found' : '❌ Data missing', ssUser);
+            
+            console.log('=== Verification Complete ===');
+        }
+
+        function cancelConfirm() {
+            document.getElementById('confirmModal').classList.remove('show');
+        }
+
+        function setupProfilePicUpload() {
+            const fileInput = document.getElementById('profilePicInput');
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                // Validation
+                if (file.size > 5 * 1024 * 1024) {
+                    showAlert('File size must be less than 5MB', 'error');
+                    fileInput.value = '';
+                    return;
+                }
+
+                const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!validTypes.includes(file.type)) {
+                    showAlert('Only JPG, PNG, and GIF images are allowed', 'error');
+                    fileInput.value = '';
+                    return;
+                }
+
+                // Read and display image
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const imageData = event.target.result;
+                    const img = document.getElementById('profilePic');
+                    img.src = imageData;
+                    img.style.display = 'inline-block';
+                    document.getElementById('picPlaceholder').style.display = 'none';
+
+                    // Save to all storage layers
+                    const user = storageManager.getCurrentUser();
+                    const updatedUser = {
+                        ...user,
+                        profilePic: imageData
+                    };
+
+                    // Layer 1: Update localStorage (primary persistent storage)
+                    const allUsers = storageManager.getAllUsers();
+                    const userIndex = allUsers.findIndex(u => u.id === user.id);
+                    if (userIndex !== -1) {
+                        allUsers[userIndex] = updatedUser;
+                        localStorage.setItem('POLIS_users', JSON.stringify(allUsers));
+                        console.log('✅ Layer 1 - Profile picture saved to localStorage');
+                    }
+
+                    // Layer 2: Update storageManager (system data manager)
+                    storageManager.updateUser(updatedUser);
+                    console.log('✅ Layer 2 - Profile picture saved via storageManager.updateUser()');
+
+                    // Layer 3: Update current session user
+                    storageManager.setCurrentUser(updatedUser);
+                    console.log('✅ Layer 3 - Profile picture updated in storageManager.setCurrentUser()');
+
+                    // Layer 4: Update sessionStorage (temporary session data)
+                    sessionStorage.setItem('userData', JSON.stringify(updatedUser));
+                    sessionStorage.setItem('POLIS_currentUser', JSON.stringify(updatedUser));
+                    console.log('✅ Layer 4 - Profile picture saved to sessionStorage');
+
+                    showAlert('✅ Profile picture updated and saved across all storage layers!', 'success');
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} show`;
+            alert.textContent = message;
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alert);
+
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                alert.classList.remove('show');
+                setTimeout(() => alert.remove(), 300);
+            }, 5000);
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function goHome() {
+            window.location.href = '../pages/student-dashboard.html';
         }
     </script>
 </body>
 </html>
-

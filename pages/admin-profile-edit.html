@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Profile - Quirino Library Hub</title>
+    <title>Admin Profile - Pedlisan Online Library Hub</title>
     <style>
         * {
             margin: 0;
@@ -13,30 +13,44 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0f2f5;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #333;
-            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 600px;
             margin: 0 auto;
-            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
-        header {
+        .header {
             background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%);
             color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
+            padding: 30px 20px;
+            text-align: center;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        header h1 {
+        .header-left {
+            flex: 1;
+            text-align: center;
+        }
+
+        .header h1 {
             font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
         }
 
         .header-actions {
@@ -44,32 +58,158 @@
             gap: 10px;
         }
 
-        .btn {
-            padding: 10px 20px;
+        .delete-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
             border: none;
+            padding: 8px 12px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 18px;
             transition: all 0.3s;
         }
 
+        .delete-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .profile-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #8B3A3A;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #8B3A3A;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #8B3A3A;
+            box-shadow: 0 0 0 3px rgba(139, 58, 58, 0.1);
+        }
+
+        .form-group input[readonly],
+        .form-group select[readonly] {
+            background: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        .read-only-field {
+            background: #f5f5f5;
+            padding: 10px 12px;
+            border-radius: 6px;
+            color: #666;
+            border: 2px solid #e0e0e0;
+            font-size: 14px;
+        }
+
+        .profile-pic-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #8B3A3A;
+            margin-bottom: 15px;
+            background: #f0f0f0;
+            display: inline-block;
+        }
+
+        .pic-placeholder {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #8B3A3A;
+            margin-bottom: 15px;
+            background: #f0f0f0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #999;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
         .btn-primary {
-            background: #A85C5C;
+            background: #8B3A3A;
             color: white;
         }
 
         .btn-primary:hover {
-            background: #8B3A3A;
+            background: #5C2E2E;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 58, 58, 0.3);
         }
 
         .btn-secondary {
-            background: #6B7280;
-            color: white;
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
         }
 
         .btn-secondary:hover {
-            background: #5C2E2E;
+            background: #e0e0e0;
         }
 
         .btn-danger {
@@ -78,228 +218,202 @@
         }
 
         .btn-danger:hover {
-            background: #B84040;
+            background: #DC2626;
+            transform: translateY(-2px);
         }
 
-        .profile-container {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .profile-header {
-            display: flex;
-            gap: 30px;
-            margin-bottom: 40px;
-            align-items: flex-start;
-        }
-
-        .profile-picture {
-            flex-shrink: 0;
-        }
-
-        .profile-pic-container {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            border-radius: 10px;
-            overflow: hidden;
-            background: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid #8B3A3A;
-            font-size: 60px;
-        }
-
-        .profile-pic-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .pic-upload-btn {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: #8B3A3A;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .pic-upload-btn:hover {
-            background: #5C2E2E;
-        }
-
-        #profilePictureInput {
-            display: none;
-        }
-
-        .profile-basic-info {
-            flex: 1;
-        }
-
-        .profile-basic-info h2 {
-            color: #8B3A3A;
-            margin-bottom: 10px;
-            font-size: 24px;
-        }
-
-        .basic-info-item {
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .basic-info-label {
-            color: #6B7280;
-            font-weight: 600;
-            min-width: 100px;
-        }
-
-        .basic-info-value {
-            color: #333;
-            font-weight: 500;
-        }
-
-        .section {
-            margin-bottom: 40px;
-        }
-
-        .section h3 {
-            color: #8B3A3A;
-            font-size: 18px;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            font-family: inherit;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
+        .edit-mode .form-group input:not([readonly]),
+        .edit-mode .form-group select,
+        .edit-mode .form-group textarea {
+            background: #fafafa;
             border-color: #8B3A3A;
-            box-shadow: 0 0 0 3px rgba(139, 58, 58, 0.1);
         }
 
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
-            justify-content: flex-end;
+        .read-only-label {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
         }
 
         .alert {
             padding: 15px;
             border-radius: 6px;
             margin-bottom: 20px;
-            animation: slideDown 0.3s ease-out;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
         }
 
         .alert-success {
-            background: #FDF2F2;
-            color: #8B3A3A;
-            border: 1px solid #D97070;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
 
         .alert-error {
-            background: #FDF2F2;
-            color: #5C2E2E;
-            border: 1px solid #D97070;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
         .alert-info {
-            background: #FDF2F2;
-            color: #5C2E2E;
-            border: 1px solid #D97070;
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
         }
 
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
         }
 
-        .loading {
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #8B3A3A;
+            margin-bottom: 10px;
+        }
+
+        .modal-message {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .modal-btn-yes {
+            background: #8B3A3A;
+            color: white;
+        }
+
+        .modal-btn-no {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #8B3A3A;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+            width: 100%;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: -9999px;
         }
 
-        @media (max-width: 768px) {
-            .profile-header {
-                flex-direction: column;
-                gap: 20px;
+        .file-input-label {
+            display: block;
+            padding: 10px 12px;
+            background: #f0f0f0;
+            border: 2px dashed #8B3A3A;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            color: #8B3A3A;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .file-input-label:hover {
+            background: #e8e8e8;
+        }
+
+        .edit-btn-text {
+            display: none;
+        }
+
+        .mode-edit .edit-btn-text {
+            display: inline;
+        }
+
+        .mode-edit .view-btn-text {
+            display: none;
+        }
+
+        .delete-step {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .delete-input {
+            margin: 15px 0;
+            width: 100%;
+        }
+
+        .delete-input input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
             }
 
-            .form-grid {
-                grid-template-columns: 1fr;
+            .header {
+                padding: 20px 15px;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .content {
+                padding: 20px 15px;
             }
 
             .button-group {
-                flex-direction: column-reverse;
+                flex-direction: column;
             }
 
             .btn {
@@ -310,378 +424,566 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
-        <header>
-            <h1>👨‍💼 Edit Admin Profile</h1>
+        <div class="header">
+            <div class="header-left">
+                <h1>⚙️ Admin Profile</h1>
+                <p id="userEmail">admin@school.com</p>
+            </div>
             <div class="header-actions">
-                <button class="btn btn-secondary" onclick="goBackToAdminDashboard()">← Back to Dashboard</button>
-                <button class="btn btn-danger" onclick="logout()">Logout</button>
+                <button class="delete-btn" title="Delete Account" onclick="initiateDeleteAccount()">🗑️</button>
             </div>
-        </header>
+        </div>
 
-        <!-- Alert Container -->
-        <div id="alertContainer"></div>
+        <div class="content">
+            <div id="alertContainer"></div>
 
-        <!-- Profile Container -->
-        <div class="profile-container">
-            <!-- Profile Header with Picture -->
-            <div class="profile-header">
-                <div class="profile-picture">
-                    <div class="profile-pic-container" id="profilePicDisplay">
-                        👨‍💼
-                    </div>
-                    <button class="pic-upload-btn" onclick="triggerProfilePictureUpload()">
-                        📷 Upload
-                    </button>
-                    <input type="file" id="profilePictureInput" accept="image/*" onchange="handleProfilePictureUpload(event)">
+            <!-- Profile Picture Section -->
+            <div class="profile-pic-section">
+                <div id="picContainer">
+                    <img id="profilePic" class="profile-pic" style="display: none;" alt="Profile Picture">
+                    <div id="picPlaceholder" class="pic-placeholder">📷</div>
                 </div>
-
-                <div class="profile-basic-info">
-                    <h2 id="profileName">Admin User</h2>
-                    <div class="basic-info-item">
-                        <span class="basic-info-label">Email:</span>
-                        <span class="basic-info-value" id="profileEmail">admin@school.com</span>
+                <div id="picUploadSection" style="display: none;">
+                    <div class="file-input-wrapper">
+                        <input type="file" id="profilePicInput" accept="image/*">
+                        <label class="file-input-label" for="profilePicInput">📁 Click to upload profile picture</label>
                     </div>
-                    <div class="basic-info-item">
-                        <span class="basic-info-label">Role:</span>
-                        <span class="basic-info-value" id="profileRole">Administrator</span>
-                    </div>
-                    <div class="basic-info-item">
-                        <span class="basic-info-label">Department:</span>
-                        <span class="basic-info-value" id="profileDept">Administration</span>
-                    </div>
-                    <div class="basic-info-item">
-                        <span class="basic-info-label">Joined:</span>
-                        <span class="basic-info-value" id="profileJoined">January 2023</span>
-                    </div>
+                    <p class="read-only-label">Supported formats: JPG, PNG (Max 5MB)</p>
                 </div>
             </div>
 
-            <!-- Edit Form -->
-            <form id="profileForm">
-                <!-- Personal Information Section -->
-                <div class="section">
-                    <h3>📝 Personal Information</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="firstName">First Name</label>
-                            <input type="text" id="firstName" name="firstName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="lastName">Last Name</label>
-                            <input type="text" id="lastName" name="lastName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone">
-                        </div>
-                    </div>
+            <!-- Personal Information -->
+            <div class="profile-section">
+                <h2 class="section-title">Personal Information</h2>
+                
+                <div class="form-group">
+                    <label for="userId">Admin ID *</label>
+                    <div class="read-only-field" id="userId">ADM-001</div>
+                    <p class="read-only-label">⚠️ ID cannot be changed</p>
                 </div>
 
-                <!-- Administrative Information Section -->
-                <div class="section">
-                    <h3>🏢 Administrative Information</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="adminRole">Admin Role</label>
-                            <select id="adminRole" name="adminRole" required>
-                                <option value="super-admin">Super Administrator</option>
-                                <option value="admin">Administrator</option>
-                                <option value="staff-admin">Staff Administrator</option>
-                                <option value="content-admin">Content Administrator</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="department">Department</label>
-                            <input type="text" id="department" name="department" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="position">Position</label>
-                            <input type="text" id="position" name="position" placeholder="e.g., Library Director">
-                        </div>
-                        <div class="form-group">
-                            <label for="officeRoom">Office Room Number</label>
-                            <input type="text" id="officeRoom" name="officeRoom" placeholder="e.g., Room 101">
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="firstName">First Name *</label>
+                    <input type="text" id="firstName" placeholder="Enter first name" readonly>
                 </div>
 
-                <!-- Bio Section -->
-                <div class="section">
-                    <h3>💬 About Me</h3>
-                    <div class="form-group">
-                        <label for="bio">Professional Bio</label>
-                        <textarea id="bio" name="bio" placeholder="Write a brief professional bio..."></textarea>
-                    </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name *</label>
+                    <input type="text" id="lastName" placeholder="Enter last name" readonly>
                 </div>
 
-                <!-- Contact Section -->
-                <div class="section">
-                    <h3>📞 Contact Information</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="officePhone">Office Phone</label>
-                            <input type="tel" id="officePhone" name="officePhone">
-                        </div>
-                        <div class="form-group">
-                            <label for="alternatePhone">Alternate Phone</label>
-                            <input type="tel" id="alternatePhone" name="alternatePhone">
-                        </div>
-                        <div class="form-group">
-                            <label for="officeAddress">Office Address</label>
-                            <input type="text" id="officeAddress" name="officeAddress" placeholder="e.g., Room 101, Building A">
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" placeholder="Enter email" readonly>
                 </div>
 
-                <!-- Preferences Section -->
-                <div class="section">
-                    <h3>⚙️ Preferences</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="emailNotifications" name="emailNotifications" checked>
-                                <span>Receive Email Notifications</span>
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="smsNotifications" name="smsNotifications">
-                                <span>Receive SMS Notifications</span>
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="activityNotifications" name="activityNotifications" checked>
-                                <span>Activity Log Notifications</span>
-                            </label>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" placeholder="Enter phone number" readonly>
                 </div>
 
-                <!-- Buttons -->
-                <div class="button-group">
-                    <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" placeholder="Enter address" readonly>
                 </div>
-            </form>
+            </div>
+
+            <!-- Administrative Information -->
+            <div class="profile-section">
+                <h2 class="section-title">Administrative Information</h2>
+
+                <div class="form-group">
+                    <label for="school">School/Institution *</label>
+                    <input type="text" id="school" placeholder="Enter school name" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="position">Position/Role *</label>
+                    <input type="text" id="position" placeholder="Enter position" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="department">Department/Division</label>
+                    <input type="text" id="department" placeholder="Enter department" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="bio">Bio/Description</label>
+                    <textarea id="bio" placeholder="Enter your bio" readonly></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Account Status</label>
+                    <input type="text" id="status" placeholder="Status" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="joinDate">Join Date</label>
+                    <input type="text" id="joinDate" placeholder="Join date" readonly>
+                </div>
+            </div>
+
+            <!-- Account Settings -->
+            <div class="profile-section">
+                <h2 class="section-title">Account Settings</h2>
+
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" placeholder="Enter new password" readonly>
+                    <p class="read-only-label">Leave blank to keep current password</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm password" readonly>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button class="btn btn-primary" id="editBtn" onclick="enableEditMode()">
+                    <span class="view-btn-text">✏️ Edit Profile</span>
+                    <span class="edit-btn-text">💾 Save Changes</span>
+                </button>
+                <button class="btn btn-secondary" id="cancelBtn" onclick="disableEditMode()" style="display: none;">
+                    ❌ Cancel
+                </button>
+                <button class="btn btn-secondary" onclick="goHome()">
+                    🏠 Back to Home
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Storage Manager Script -->
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">⚠️</div>
+            <div class="modal-title">Confirm Save</div>
+            <div class="modal-message" id="confirmMessage">Are you sure you want to save changes?</div>
+            <div class="modal-buttons">
+                <button class="modal-btn-yes" onclick="confirmSave()">Yes, Save</button>
+                <button class="modal-btn-no" onclick="cancelConfirm()">No, Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">🗑️</div>
+            <div class="modal-title">Delete Account</div>
+            <div class="modal-message">
+                <strong>Warning: This action cannot be undone!</strong>
+                <div class="delete-step">Step 1: Click "I Understand" to confirm you understand the consequences</div>
+                <button class="btn btn-danger" onclick="showDeleteStep2()" style="margin-top: 10px; width: 100%;">I Understand the Risks</button>
+            </div>
+            <div class="modal-buttons" style="margin-top: 10px;">
+                <button class="modal-btn-no" onclick="cancelDelete()" style="flex: 1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Account Step 2 Modal -->
+    <div id="deleteStep2Modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">⚠️</div>
+            <div class="modal-title">Confirm Deletion</div>
+            <div class="modal-message">
+                <div class="delete-step">Step 2: Type "DELETE" to confirm</div>
+                <div class="delete-input">
+                    <input type="text" id="deleteConfirmInput" placeholder="Type DELETE to confirm">
+                </div>
+                <button class="btn btn-danger" onclick="finalDeleteAccount()" style="width: 100%;">🗑️ Permanently Delete</button>
+            </div>
+            <div class="modal-buttons" style="margin-top: 10px;">
+                <button class="modal-btn-no" onclick="cancelDelete()" style="flex: 1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Storage Manager -->
     <script src="../js/data-storage.js"></script>
 
     <script>
-        let currentUser = null;
+        let isEditMode = false;
+        let originalData = {};
+        const editableFields = ['firstName', 'lastName', 'email', 'phone', 'address', 'school', 'position', 'department', 'bio', 'password', 'confirmPassword'];
+        const readOnlyFields = ['userId', 'status', 'joinDate'];
 
+        // Load profile on page load
         document.addEventListener('DOMContentLoaded', () => {
-            // Load from storageManager instead of sessionStorage
-            currentUser = storageManager.getCurrentUser();
-            
-            if (!currentUser || currentUser.role !== 'admin') {
-                alert('Access denied. Administrators only.');
+            loadProfile();
+            setupProfilePicUpload();
+        });
+
+        function loadProfile() {
+            const user = storageManager.getCurrentUser();
+            if (!user || (user.role !== 'admin' && user.role !== 'super-admin')) {
+                alert('Access Denied. Admin access required.');
                 window.location.href = '../index.html';
                 return;
             }
 
-            loadProfileData();
-            setupFormHandler();
-        });
+            // Load user data
+            document.getElementById('userId').textContent = user.id || 'ADM-000';
+            document.getElementById('firstName').value = user.first_name || '';
+            document.getElementById('lastName').value = user.last_name || '';
+            document.getElementById('email').value = user.email || '';
+            document.getElementById('userEmail').textContent = user.email || '';
+            document.getElementById('phone').value = user.phone || '';
+            document.getElementById('address').value = user.address || '';
+            document.getElementById('school').value = user.school || '';
+            document.getElementById('position').value = user.position || '';
+            document.getElementById('department').value = user.department || '';
+            document.getElementById('bio').value = user.bio || '';
+            document.getElementById('status').value = user.status || 'active';
+            document.getElementById('joinDate').value = formatDate(user.joinDate) || '';
 
-        function loadProfileData() {
-            // Load from sessionStorage or API
-            document.getElementById('firstName').value = currentUser.firstName || 'Admin';
-            document.getElementById('lastName').value = currentUser.lastName || 'User';
-            document.getElementById('email').value = currentUser.email || '';
-            document.getElementById('phone').value = currentUser.phone || '';
-            document.getElementById('adminRole').value = currentUser.adminRole || 'admin';
-            document.getElementById('department').value = currentUser.department || 'Administration';
-            document.getElementById('position').value = currentUser.position || '';
-            document.getElementById('officeRoom').value = currentUser.officeRoom || '';
-            document.getElementById('bio').value = currentUser.bio || '';
-            document.getElementById('officePhone').value = currentUser.officePhone || '';
-            document.getElementById('alternatePhone').value = currentUser.alternatePhone || '';
-            document.getElementById('officeAddress').value = currentUser.officeAddress || '';
-
-            // Update profile display
-            document.getElementById('profileName').textContent = `${currentUser.firstName || 'Admin'} ${currentUser.lastName || 'User'}`;
-            document.getElementById('profileEmail').textContent = currentUser.email || '';
-            document.getElementById('profileDept').textContent = currentUser.department || 'Administration';
-            
-            // Load profile picture if exists
-            if (currentUser.profilePicture) {
-                document.getElementById('profilePicDisplay').innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
+            // Load profile picture
+            if (user.profilePic) {
+                const img = document.getElementById('profilePic');
+                img.src = user.profilePic;
+                img.style.display = 'inline-block';
+                document.getElementById('picPlaceholder').style.display = 'none';
             }
+
+            // Store original data for cancel functionality
+            saveOriginalData();
         }
 
-        function setupFormHandler() {
-            document.getElementById('profileForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                saveProfileChanges();
+        function saveOriginalData() {
+            editableFields.forEach(field => {
+                originalData[field] = document.getElementById(field).value;
             });
         }
 
-        function saveProfileChanges() {
-            const formData = new FormData(document.getElementById('profileForm'));
-            
+        function enableEditMode() {
+            if (isEditMode) {
+                // Save mode
+                saveProfile();
+                return;
+            }
+
+            isEditMode = true;
+            editableFields.forEach(field => {
+                const input = document.getElementById(field);
+                input.removeAttribute('readonly');
+            });
+
+            document.getElementById('editBtn').classList.add('mode-edit');
+            document.getElementById('cancelBtn').style.display = 'flex';
+            document.getElementById('picUploadSection').style.display = 'block';
+
+            showAlert('Edit mode enabled. Make your changes and click Save.', 'info');
+        }
+
+        function disableEditMode() {
+            isEditMode = false;
+            editableFields.forEach(field => {
+                const input = document.getElementById(field);
+                input.setAttribute('readonly', '');
+                input.value = originalData[field];
+            });
+
+            document.getElementById('editBtn').classList.remove('mode-edit');
+            document.getElementById('cancelBtn').style.display = 'none';
+            document.getElementById('picUploadSection').style.display = 'none';
+
+            showAlert('Changes cancelled. Reverted to previous data.', 'info');
+        }
+
+        function saveProfile() {
+            // Validation
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!firstName || !lastName) {
+                showAlert('First name and last name are required', 'error');
+                return;
+            }
+
+            if (!email || !email.includes('@')) {
+                showAlert('Please enter a valid email address', 'error');
+                return;
+            }
+
+            // Check password match if password is being changed
+            if (password && password !== confirmPassword) {
+                showAlert('Passwords do not match', 'error');
+                return;
+            }
+
+            if (password && password.length < 6) {
+                showAlert('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            // Show confirmation modal
+            document.getElementById('confirmModal').classList.add('show');
+        }
+
+        function confirmSave() {
+            document.getElementById('confirmModal').classList.remove('show');
+
+            const user = storageManager.getCurrentUser();
             const updatedUser = {
-                ...currentUser,
-                firstName: formData.get('firstName'),
-                lastName: formData.get('lastName'),
-                email: formData.get('email'),
-                phone: formData.get('phone'),
-                adminRole: formData.get('adminRole'),
-                department: formData.get('department'),
-                position: formData.get('position'),
-                officeRoom: formData.get('officeRoom'),
-                bio: formData.get('bio'),
-                officePhone: formData.get('officePhone'),
-                alternatePhone: formData.get('alternatePhone'),
-                officeAddress: formData.get('officeAddress'),
-                emailNotifications: document.getElementById('emailNotifications').checked,
-                smsNotifications: document.getElementById('smsNotifications').checked,
-                activityNotifications: document.getElementById('activityNotifications').checked
+                ...user,
+                first_name: document.getElementById('firstName').value.trim(),
+                last_name: document.getElementById('lastName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                address: document.getElementById('address').value.trim(),
+                school: document.getElementById('school').value.trim(),
+                position: document.getElementById('position').value.trim(),
+                department: document.getElementById('department').value.trim(),
+                bio: document.getElementById('bio').value.trim(),
+                status: document.getElementById('status').value || 'active'
             };
 
-            // Save to storageManager
-            storageManager.updateUser(currentUser.id, updatedUser);
+            const newPassword = document.getElementById('password').value;
+            if (newPassword) {
+                updatedUser.password = newPassword;
+            }
+
+            // Layer 1: Update localStorage (primary persistent storage)
+            const allUsers = storageManager.getAllUsers();
+            const userIndex = allUsers.findIndex(u => u.id === user.id);
+            if (userIndex !== -1) {
+                allUsers[userIndex] = updatedUser;
+                localStorage.setItem('POLIS_users', JSON.stringify(allUsers));
+                console.log('✅ Layer 1 - localStorage updated:', updatedUser);
+            }
+
+            // Layer 2: Update storageManager (system data manager)
+            storageManager.updateUser(updatedUser);
+            console.log('✅ Layer 2 - storageManager.updateUser() executed');
+
+            // Layer 3: Update current session user
             storageManager.setCurrentUser(updatedUser);
-            currentUser = updatedUser;
-            
-            showAlert('✅ Profile updated successfully!', 'success');
-            loadProfileData();
-        }
+            console.log('✅ Layer 3 - storageManager.setCurrentUser() executed');
 
-        function triggerProfilePictureUpload() {
-            document.getElementById('profilePictureInput').click();
-        }
+            // Layer 4: Update sessionStorage (temporary session data)
+            sessionStorage.setItem('userData', JSON.stringify(updatedUser));
+            sessionStorage.setItem('POLIS_currentUser', JSON.stringify(updatedUser));
+            console.log('✅ Layer 4 - sessionStorage updated:', updatedUser);
 
-        function handleProfilePictureUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+            // Verify all storage layers
+            verifyStorageLayers(updatedUser);
 
-            // Validate file type
-            if (!file.type.startsWith('image/')) {
-                showAlert('❌ Please select an image file', 'error');
-                return;
-            }
+            isEditMode = false;
+            editableFields.forEach(field => {
+                const input = document.getElementById(field);
+                input.setAttribute('readonly', '');
+            });
 
-            // Validate file size (max 5MB)
-            if (file.size > 5 * 1024 * 1024) {
-                showAlert('❌ File size must be less than 5MB', 'error');
-                return;
-            }
-
-            // Read file and convert to base64
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const base64String = e.target.result;
-                
-                // Update display
-                document.getElementById('profilePicDisplay').innerHTML = `<img src="${base64String}" alt="Profile">`;
-                
-                // Save to storageManager
-                currentUser.profilePicture = base64String;
-                storageManager.updateUser(currentUser.id, currentUser);
-                storageManager.setCurrentUser(currentUser);
-                
-                showAlert('✅ Profile picture updated successfully!', 'success');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function resetForm() {
-            loadProfileData();
-            showAlert('Form reset to last saved values', 'info');
-        }
-
-        function openChangePasswordModal() {
-            document.getElementById('passwordModal').style.display = 'flex';
-        }
-
-        function closePasswordModal() {
-            document.getElementById('passwordModal').style.display = 'none';
-        }
-
-        function changePassword() {
-            const current = document.getElementById('currentPassword').value;
-            const newPass = document.getElementById('newPassword').value;
-            const confirm = document.getElementById('confirmPassword').value;
-
-            if (!current || !newPass || !confirm) {
-                showAlert('❌ All password fields are required', 'error');
-                return;
-            }
-
-            if (newPass !== confirm) {
-                showAlert('❌ New passwords do not match', 'error');
-                return;
-            }
-
-            if (newPass.length < 6) {
-                showAlert('❌ Password must be at least 6 characters', 'error');
-                return;
-            }
-
-            currentUser.password = newPass;
-            storageManager.updateUser(currentUser.id, currentUser);
-            storageManager.setCurrentUser(currentUser);
-            
-            closePasswordModal();
-            showAlert('✅ Password changed successfully!', 'success');
-            
-            // Clear form
-            document.getElementById('currentPassword').value = '';
-            document.getElementById('newPassword').value = '';
+            document.getElementById('editBtn').classList.remove('mode-edit');
+            document.getElementById('cancelBtn').style.display = 'none';
+            document.getElementById('picUploadSection').style.display = 'none';
+            document.getElementById('password').value = '';
             document.getElementById('confirmPassword').value = '';
+
+            // Reload to show updated data
+            loadProfile();
+            saveOriginalData();
+            showAlert('✅ Profile updated successfully across all storage layers!', 'success');
         }
 
-        function openTwoFactorModal() {
-            alert('Two-Factor Authentication will be enabled. This feature requires additional setup.');
-        }
-
-        function viewLoginHistory() {
-            alert('Login history feature is coming soon.');
-        }
-
-        function goBackToAdminDashboard() {
-            window.location.href = 'admin-dashboard.html';
-        }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                storageManager.clearCurrentUser();
-                window.location.href = '../index.html';
-            }
-        }
-
-        function showAlert(message, type) {
-            const alertContainer = document.getElementById('alertContainer');
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type}`;
-            alertDiv.textContent = message;
+        function verifyStorageLayers(userData) {
+            console.log('=== Verifying All Storage Layers ===');
             
-            alertContainer.innerHTML = '';
-            alertContainer.appendChild(alertDiv);
+            // Check localStorage
+            const lsUsers = JSON.parse(localStorage.getItem('POLIS_users') || '[]');
+            const lsUser = lsUsers.find(u => u.id === userData.id);
+            console.log('Layer 1 (localStorage):', lsUser ? '✅ Data found' : '❌ Data missing', lsUser);
+            
+            // Check storageManager
+            const smUser = storageManager.getUserById(userData.id);
+            console.log('Layer 2 (storageManager):', smUser ? '✅ Data found' : '❌ Data missing', smUser);
+            
+            // Check currentUser
+            const cuUser = storageManager.getCurrentUser();
+            console.log('Layer 3 (currentUser):', cuUser && cuUser.id === userData.id ? '✅ Data found' : '❌ Data missing', cuUser);
+            
+            // Check sessionStorage
+            const ssUser = JSON.parse(sessionStorage.getItem('userData') || '{}');
+            console.log('Layer 4 (sessionStorage):', ssUser.id ? '✅ Data found' : '❌ Data missing', ssUser);
+            
+            console.log('=== Verification Complete ===');
+        }
 
-            if (type !== 'error') {
-                setTimeout(() => {
-                    alertDiv.style.opacity = '0';
-                    alertDiv.style.transition = 'opacity 0.3s';
-                    setTimeout(() => alertDiv.remove(), 300);
-                }, 3000);
+        function cancelConfirm() {
+            document.getElementById('confirmModal').classList.remove('show');
+        }
+
+        function initiateDeleteAccount() {
+            document.getElementById('deleteModal').classList.add('show');
+        }
+
+        function showDeleteStep2() {
+            document.getElementById('deleteModal').classList.remove('show');
+            document.getElementById('deleteStep2Modal').classList.add('show');
+            document.getElementById('deleteConfirmInput').value = '';
+        }
+
+        function cancelDelete() {
+            document.getElementById('deleteModal').classList.remove('show');
+            document.getElementById('deleteStep2Modal').classList.remove('show');
+        }
+
+        function finalDeleteAccount() {
+            const confirmInput = document.getElementById('deleteConfirmInput').value;
+            if (confirmInput !== 'DELETE') {
+                showAlert('Please type DELETE to confirm account deletion', 'error');
+                return;
             }
+
+            const user = storageManager.getCurrentUser();
+            const userId = user.id;
+
+            // Remove from all 4 storage layers
+            // Layer 1: Remove from localStorage
+            const allUsers = JSON.parse(localStorage.getItem('POLIS_users') || '[]');
+            const filteredUsers = allUsers.filter(u => u.id !== userId);
+            localStorage.setItem('POLIS_users', JSON.stringify(filteredUsers));
+            console.log('✅ Layer 1 - User removed from localStorage');
+
+            // Layer 2: Remove from storageManager
+            storageManager.deleteUser(userId);
+            console.log('✅ Layer 2 - User removed from storageManager');
+
+            // Layer 3: Clear current user
+            storageManager.clearCurrentUser();
+            console.log('✅ Layer 3 - Current user cleared');
+
+            // Layer 4: Clear sessionStorage
+            sessionStorage.removeItem('userData');
+            sessionStorage.removeItem('POLIS_currentUser');
+            console.log('✅ Layer 4 - User removed from sessionStorage');
+
+            // Verify deletion
+            verifyAccountDeletion(userId);
+
+            showAlert('✅ Account permanently deleted from all systems. Redirecting...', 'success');
+            setTimeout(() => {
+                window.location.href = '../index.html';
+            }, 2000);
+        }
+
+        function verifyAccountDeletion(userId) {
+            console.log('=== Verifying Account Deletion ===');
+            
+            // Check localStorage
+            const lsUsers = JSON.parse(localStorage.getItem('POLIS_users') || '[]');
+            const lsUser = lsUsers.find(u => u.id === userId);
+            console.log('Layer 1 (localStorage):', lsUser ? '❌ User still exists' : '✅ User deleted', lsUser);
+            
+            // Check storageManager
+            const smUser = storageManager.getUserById(userId);
+            console.log('Layer 2 (storageManager):', smUser ? '❌ User still exists' : '✅ User deleted', smUser);
+            
+            // Check currentUser
+            const cuUser = storageManager.getCurrentUser();
+            console.log('Layer 3 (currentUser):', cuUser ? '❌ User still exists' : '✅ Cleared', cuUser);
+            
+            // Check sessionStorage
+            const ssUser = JSON.parse(sessionStorage.getItem('userData') || '{}');
+            console.log('Layer 4 (sessionStorage):', ssUser.id ? '❌ User still exists' : '✅ Cleared', ssUser);
+            
+            console.log('=== Account Deletion Verified ===');
+        }
+
+        function setupProfilePicUpload() {
+            const fileInput = document.getElementById('profilePicInput');
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                // Validation
+                if (file.size > 5 * 1024 * 1024) {
+                    showAlert('File size must be less than 5MB', 'error');
+                    fileInput.value = '';
+                    return;
+                }
+
+                const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!validTypes.includes(file.type)) {
+                    showAlert('Only JPG, PNG, and GIF images are allowed', 'error');
+                    fileInput.value = '';
+                    return;
+                }
+
+                // Read and display image
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const imageData = event.target.result;
+                    const img = document.getElementById('profilePic');
+                    img.src = imageData;
+                    img.style.display = 'inline-block';
+                    document.getElementById('picPlaceholder').style.display = 'none';
+
+                    // Save to all storage layers
+                    const user = storageManager.getCurrentUser();
+                    const updatedUser = {
+                        ...user,
+                        profilePic: imageData
+                    };
+
+                    // Layer 1: Update localStorage (primary persistent storage)
+                    const allUsers = storageManager.getAllUsers();
+                    const userIndex = allUsers.findIndex(u => u.id === user.id);
+                    if (userIndex !== -1) {
+                        allUsers[userIndex] = updatedUser;
+                        localStorage.setItem('POLIS_users', JSON.stringify(allUsers));
+                        console.log('✅ Layer 1 - Profile picture saved to localStorage');
+                    }
+
+                    // Layer 2: Update storageManager (system data manager)
+                    storageManager.updateUser(updatedUser);
+                    console.log('✅ Layer 2 - Profile picture saved via storageManager.updateUser()');
+
+                    // Layer 3: Update current session user
+                    storageManager.setCurrentUser(updatedUser);
+                    console.log('✅ Layer 3 - Profile picture updated in storageManager.setCurrentUser()');
+
+                    // Layer 4: Update sessionStorage (temporary session data)
+                    sessionStorage.setItem('userData', JSON.stringify(updatedUser));
+                    sessionStorage.setItem('POLIS_currentUser', JSON.stringify(updatedUser));
+                    console.log('✅ Layer 4 - Profile picture saved to sessionStorage');
+
+                    showAlert('✅ Profile picture updated and saved across all storage layers!', 'success');
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} show`;
+            alert.textContent = message;
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alert);
+
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                alert.classList.remove('show');
+                setTimeout(() => alert.remove(), 300);
+            }, 5000);
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function goHome() {
+            window.location.href = '../pages/admin-dashboard.html';
         }
     </script>
 </body>
 </html>
-
-
-
-
-
-

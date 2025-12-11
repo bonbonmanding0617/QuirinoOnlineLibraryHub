@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borrowing Statistics - Pedlisan Online Library Hub</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%);
+            color: white;
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .navbar-brand {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .navbar-nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .navbar-nav a {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .navbar-nav a:hover {
+            opacity: 0.8;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 2rem 2rem;
+        }
+
+        /* Header & Filters */
+        .header-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-top h1 {
+            color: #8B3A3A;
+            font-size: 1.8rem;
+        }
+
+        .header-top p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #f9f9f9;
+            border-radius: 6px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #8B3A3A;
+            box-shadow: 0 0 0 3px rgba(139, 58, 58, 0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #8B3A3A;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5C2E2E;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 58, 58, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-export {
+            background: #10B981;
+            color: white;
+        }
+
+        .btn-export:hover {
+            background: #059669;
+        }
+
+        /* Statistics Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #C84C4C;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card.weekly { border-left-color: #4A90E2; }
+        .stat-card.monthly { border-left-color: #7ED321; }
+        .stat-card.total { border-left-color: #F5A623; }
+        .stat-card.status { border-left-color: #FF6B6B; }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            color: #8B3A3A;
+            font-size: 2.2rem;
+            font-weight: bold;
+        }
+
+        .stat-subtext {
+            color: #999;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Sections */
+        .section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .section h2 {
+            color: #8B3A3A;
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #C84C4C;
+            padding-bottom: 0.75rem;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            padding: 1rem;
+            border-radius: 6px;
+            background: #f9f9f9;
+        }
+
+        .chart-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        /* Tables */
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2rem;
+        }
+
+        .table-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .table-section h3 {
+            color: #8B3A3A;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-box {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        thead {
+            background-color: #f0f0f0;
+        }
+
+        th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #8B3A3A;
+            border-bottom: 2px solid #ddd;
+            cursor: pointer;
+        }
+
+        th:hover {
+            background-color: #e8e8e8;
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #8B3A3A 0%, #C84C4C 100%);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending { background: #FEF3C7; color: #92400E; }
+        .status-approved { background: #D1FAE5; color: #065F46; }
+        .status-borrowed { background: #DBEAFE; color: #0C3E8E; }
+        .status-returned { background: #D1FAE5; color: #065F46; }
+        .status-overdue { background: #FEE2E2; color: #991B1B; }
+
+        .clickable-row {
+            cursor: pointer;
+        }
+
+        .clickable-row:hover {
+            background-color: #f0e8e8 !important;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #C84C4C;
+            padding-bottom: 1rem;
+        }
+
+        .modal-header h2 {
+            color: #8B3A3A;
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .modal-detail {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-detail-label {
+            color: #666;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .modal-detail-value {
+            color: #333;
+            font-size: 1rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Status Breakdown */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .status-item {
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .status-item-label {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-item-count {
+            color: #8B3A3A;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        /* No Data */
+        .no-data {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #8B3A3A;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Comparison Section */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .comparison-card {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border-left: 4px solid #8B3A3A;
+        }
+
+        .comparison-card h4 {
+            color: #8B3A3A;
+            margin-bottom: 1rem;
+        }
+
+        .comparison-stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .comparison-stat-label {
+            color: #666;
+        }
+
+        .comparison-stat-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .filters-section {
+                grid-template-columns: 1fr;
+            }
+
+            .charts-grid,
+            .tables-grid,
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="navbar-brand">📊 Borrowing Statistics</div>
+        <div class="navbar-nav">
+            <a href="../pages/admin-dashboard.html">Dashboard</a>
+            <a href="../pages/admin-profile.html">Profile</a>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="header-top">
+                <div>
+                    <h1>Borrowing Statistics & Analytics</h1>
+                    <p>Advanced tracking and analysis of library borrowing patterns</p>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-export" onclick="exportPDF()">📥 Export PDF</button>
+                    <button class="btn btn-export" onclick="exportCSV()">📊 Export CSV</button>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-section">
+                <div class="filter-group">
+                    <label>Date Range</label>
+                    <input type="date" id="startDate">
+                </div>
+                <div class="filter-group">
+                    <label>To</label>
+                    <input type="date" id="endDate">
+                </div>
+                <div class="filter-group">
+                    <label>Department</label>
+                    <select id="departmentFilter">
+                        <option value="">All Departments</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Science">Science</option>
+                        <option value="English">English</option>
+                        <option value="History">History</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Category</label>
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                        <option value="Reference">Reference</option>
+                        <option value="Academic">Academic</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select id="statusFilter">
+                        <option value="">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="borrowed">Borrowed</option>
+                        <option value="returned">Returned</option>
+                        <option value="overdue">Overdue</option>
+                    </select>
+                </div>
+                <div class="action-buttons" style="grid-column: 1/-1; justify-content: flex-end;">
+                    <button class="btn btn-primary" onclick="applyFilters()">🔍 Apply Filters</button>
+                    <button class="btn btn-secondary" onclick="resetFilters()">↻ Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card weekly" onclick="showDetailModal('weekly')">
+                <div class="stat-label">Total Borrowings</div>
+                <div class="stat-value" id="totalBorrows">0</div>
+                <div class="stat-subtext">Click for details</div>
+            </div>
+            <div class="stat-card monthly" onclick="showDetailModal('active')">
+                <div class="stat-label">Active Borrowings</div>
+                <div class="stat-value" id="activeBorrows">0</div>
+                <div class="stat-subtext">Currently out</div>
+            </div>
+            <div class="stat-card status" onclick="showDetailModal('overdue')">
+                <div class="stat-label">Overdue Items</div>
+                <div class="stat-value" id="overdueBorrows">0</div>
+                <div class="stat-subtext">⚠️ Needs attention</div>
+            </div>
+            <div class="stat-card total" onclick="showDetailModal('returned')">
+                <div class="stat-label">Returned Books</div>
+                <div class="stat-value" id="returnedBorrows">0</div>
+                <div class="stat-subtext">Completed</div>
+            </div>
+        </div>
+
+        <!-- Status Breakdown -->
+        <div class="section">
+            <h2>📋 Borrowing Status Breakdown</h2>
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="status-item-label">Pending</div>
+                    <div class="status-item-count" id="statusPending">0</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-item-label">Approved</div>
+                    <div class="status-item-count" id="statusApproved">0</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-item-label">Borrowed</div>
+                    <div class="status-item-count" id="statusBorrowed">0</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-item-label">Returned</div>
+                    <div class="status-item-count" id="statusReturned">0</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-item-label">Overdue</div>
+                    <div class="status-item-count" id="statusOverdue">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="section">
+            <h2>📈 Borrowing Trends</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Daily Borrowing Trend</div>
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Borrowing Status Distribution</div>
+                    <canvas id="statusChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Top Categories</div>
+                    <canvas id="categoryChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Department Breakdown</div>
+                    <canvas id="departmentChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="section">
+            <h2>📊 Period Comparison</h2>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4>This Month</h4>
+                    <div class="comparison-stat">
+                        <span class="comparison-stat-label">Borrowings:</span>
+                        <span class="comparison-stat-value" id="compareThisMonth">0</span>
+                    </div>
+                    <div class="comparison-stat">
+                        <span class="comparison-stat-label">Average/Day:</span>
+                        <span class="comparison-stat-value" id="compareThisMonthAvg">0</span>
+                    </div>
+                </div>
+                <div class="comparison-card">
+                    <h4>Last Month</h4>
+                    <div class="comparison-stat">
+                        <span class="comparison-stat-label">Borrowings:</span>
+                        <span class="comparison-stat-value" id="compareLastMonth">0</span>
+                    </div>
+                    <div class="comparison-stat">
+                        <span class="comparison-stat-label">Average/Day:</span>
+                        <span class="comparison-stat-value" id="compareLastMonthAvg">0</span>
+                    </div>
+                </div>
+                <div class="comparison-card">
+                    <h4>Change</h4>
+                    <div class="comparison-stat">
+                        <span class="comparison-stat-label">Difference:</span>
+                        <span class="comparison-stat-value" id="compareChange">0</span>
+                    </div>
+                    <div class="comparison-stat">
+                        <span class="comparison-stat-label">Growth:</span>
+                        <span class="comparison-stat-value" id="compareGrowth">0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tables Section -->
+        <div class="tables-grid">
+            <!-- Top Books -->
+            <div class="table-section">
+                <h3>📚 Most Borrowed Books</h3>
+                <div class="search-box">
+                    <input type="text" id="booksSearch" placeholder="Search books...">
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Book Title</th>
+                            <th>Category</th>
+                            <th>Times</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topBooksBody">
+                        <tr><td colspan="4" class="no-data">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Top Borrowers -->
+            <div class="table-section">
+                <h3>👥 Top Borrowers</h3>
+                <div class="search-box">
+                    <input type="text" id="borrowersSearch" placeholder="Search borrowers...">
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topBorrowersBody">
+                        <tr><td colspan="4" class="no-data">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Overdue Items -->
+            <div class="table-section">
+                <h3>⚠️ Overdue Items</h3>
+                <div class="search-box">
+                    <input type="text" id="overdueSearch" placeholder="Search...">
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Borrower</th>
+                            <th>Days Overdue</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="overdueBody">
+                        <tr><td colspan="4" class="no-data">No overdue items</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Recent Borrowings -->
+            <div class="table-section">
+                <h3>📖 Recent Borrowings</h3>
+                <div class="search-box">
+                    <input type="text" id="recentSearch" placeholder="Search...">
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Book</th>
+                            <th>Borrower</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentBody">
+                        <tr><td colspan="4" class="no-data">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Details</h2>
+                <button class="close-btn" onclick="closeDetailModal()">✕</button>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        let chartsInstances = {};
+        let allData = {
+            books: [],
+            borrowers: [],
+            borrowings: []
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthentication();
+            setDefaultDates();
+            loadAllData();
+            
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+        });
+
+        function checkAuthentication() {
+            const userRole = localStorage.getItem('userRole');
+            if (!userRole || (userRole !== 'admin' && userRole !== 'teacher' && userRole !== 'super-admin')) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        function setDefaultDates() {
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+            
+            document.getElementById('endDate').valueAsDate = today;
+            document.getElementById('startDate').valueAsDate = thirtyDaysAgo;
+        }
+
+        function loadAllData() {
+            // Generate sample data
+            generateSampleData();
+            applyFilters();
+        }
+
+        function generateSampleData() {
+            const bookTitles = ['To Kill a Mockingbird', '1984', 'Pride and Prejudice', 'The Great Gatsby', 'Jane Eyre', 'Harry Potter', 'The Hobbit', 'Dune'];
+            const categories = ['Fiction', 'Non-Fiction', 'Reference', 'Academic'];
+            const names = ['John Smith', 'Sarah Johnson', 'Michael Brown', 'Emily Davis', 'James Wilson'];
+            const statuses = ['pending', 'approved', 'borrowed', 'returned', 'overdue'];
+
+            allData.books = bookTitles.map((title, i) => ({
+                id: i + 1,
+                title,
+                category: categories[Math.floor(Math.random() * categories.length)],
+                borrowed: Math.floor(Math.random() * 30) + 5
+            }));
+
+            allData.borrowers = names.map((name, i) => ({
+                id: i + 1,
+                name,
+                role: i % 2 === 0 ? 'Student' : 'Teacher',
+                department: ['Mathematics', 'Science', 'English'][Math.floor(Math.random() * 3)],
+                borrowed: Math.floor(Math.random() * 20) + 3
+            }));
+
+            allData.borrowings = Array.from({length: 50}, (_, i) => ({
+                id: i + 1,
+                book: bookTitles[Math.floor(Math.random() * bookTitles.length)],
+                borrower: names[Math.floor(Math.random() * names.length)],
+                date: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+                status: statuses[Math.floor(Math.random() * statuses.length)],
+                daysOverdue: Math.max(0, Math.floor(Math.random() * 15) - 10)
+            }));
+        }
+
+        function applyFilters() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            updateStatistics();
+            updateCharts();
+            updateTables();
+            updateComparison();
+        }
+
+        function resetFilters() {
+            setDefaultDates();
+            document.getElementById('departmentFilter').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            applyFilters();
+        }
+
+        function updateStatistics() {
+            const totalBorrowings = allData.borrowings.length;
+            const activeBorrowings = allData.borrowings.filter(b => b.status === 'borrowed').length;
+            const overdueBorrowings = allData.borrowings.filter(b => b.status === 'overdue').length;
+            const returnedBorrowings = allData.borrowings.filter(b => b.status === 'returned').length;
+
+            document.getElementById('totalBorrows').textContent = totalBorrowings;
+            document.getElementById('activeBorrows').textContent = activeBorrowings;
+            document.getElementById('overdueBorrows').textContent = overdueBorrowings;
+            document.getElementById('returnedBorrows').textContent = returnedBorrowings;
+
+            // Status breakdown
+            document.getElementById('statusPending').textContent = allData.borrowings.filter(b => b.status === 'pending').length;
+            document.getElementById('statusApproved').textContent = allData.borrowings.filter(b => b.status === 'approved').length;
+            document.getElementById('statusBorrowed').textContent = activeBorrowings;
+            document.getElementById('statusReturned').textContent = returnedBorrowings;
+            document.getElementById('statusOverdue').textContent = overdueBorrowings;
+        }
+
+        function updateCharts() {
+            // Trend Chart
+            const ctx1 = document.getElementById('trendChart').getContext('2d');
+            if (chartsInstances.trend) chartsInstances.trend.destroy();
+            chartsInstances.trend = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 30}, (_, i) => `Day ${i + 1}`),
+                    datasets: [{
+                        label: 'Daily Borrowings',
+                        data: Array.from({length: 30}, () => Math.floor(Math.random() * 25) + 5),
+                        borderColor: '#8B3A3A',
+                        backgroundColor: 'rgba(139, 58, 58, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Status Chart
+            const ctx2 = document.getElementById('statusChart').getContext('2d');
+            if (chartsInstances.status) chartsInstances.status.destroy();
+            chartsInstances.status = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending', 'Approved', 'Borrowed', 'Returned', 'Overdue'],
+                    datasets: [{
+                        data: [5, 8, 12, 20, 5],
+                        backgroundColor: ['#FEF3C7', '#D1FAE5', '#DBEAFE', '#D1FAE5', '#FEE2E2']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Category Chart
+            const ctx3 = document.getElementById('categoryChart').getContext('2d');
+            if (chartsInstances.category) chartsInstances.category.destroy();
+            chartsInstances.category = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: ['Fiction', 'Non-Fiction', 'Reference', 'Academic'],
+                    datasets: [{
+                        label: 'Borrowings',
+                        data: [25, 15, 10, 20],
+                        backgroundColor: ['#8B3A3A', '#C84C4C', '#4A90E2', '#7ED321']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Department Chart
+            const ctx4 = document.getElementById('departmentChart').getContext('2d');
+            if (chartsInstances.department) chartsInstances.department.destroy();
+            chartsInstances.department = new Chart(ctx4, {
+                type: 'radar',
+                data: {
+                    labels: ['Mathematics', 'Science', 'English', 'History'],
+                    datasets: [{
+                        label: 'Borrowings',
+                        data: [20, 25, 15, 18],
+                        borderColor: '#8B3A3A',
+                        backgroundColor: 'rgba(139, 58, 58, 0.2)'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        function updateTables() {
+            // Top Books
+            const topBooks = allData.books.sort((a, b) => b.borrowed - a.borrowed).slice(0, 5);
+            document.getElementById('topBooksBody').innerHTML = topBooks.map((book, i) => `
+                <tr class="clickable-row" onclick="showDetailModal('book', ${book.id})">
+                    <td><span class="rank-badge">${i + 1}</span></td>
+                    <td><strong>${book.title}</strong></td>
+                    <td>${book.category}</td>
+                    <td>${book.borrowed}</td>
+                </tr>
+            `).join('');
+
+            // Top Borrowers
+            const topBorrowers = allData.borrowers.sort((a, b) => b.borrowed - a.borrowed).slice(0, 5);
+            document.getElementById('topBorrowersBody').innerHTML = topBorrowers.map((borrower, i) => `
+                <tr class="clickable-row" onclick="showDetailModal('borrower', ${borrower.id})">
+                    <td><span class="rank-badge">${i + 1}</span></td>
+                    <td><strong>${borrower.name}</strong></td>
+                    <td>${borrower.role}</td>
+                    <td>${borrower.borrowed}</td>
+                </tr>
+            `).join('');
+
+            // Overdue Items
+            const overdueItems = allData.borrowings.filter(b => b.status === 'overdue');
+            document.getElementById('overdueBody').innerHTML = overdueItems.length ? overdueItems.map(item => `
+                <tr>
+                    <td>${item.book}</td>
+                    <td>${item.borrower}</td>
+                    <td><strong style="color: #991B1B;">${item.daysOverdue} days</strong></td>
+                    <td><button class="btn btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">Send Reminder</button></td>
+                </tr>
+            `).join('') : '<tr><td colspan="4" class="no-data">No overdue items</td></tr>';
+
+            // Recent Borrowings
+            const recentBorrowings = allData.borrowings.slice(0, 10);
+            document.getElementById('recentBody').innerHTML = recentBorrowings.map(item => `
+                <tr>
+                    <td>${item.date}</td>
+                    <td>${item.book}</td>
+                    <td>${item.borrower}</td>
+                    <td><span class="status-badge status-${item.status}">${item.status.toUpperCase()}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function updateComparison() {
+            document.getElementById('compareThisMonth').textContent = '45';
+            document.getElementById('compareThisMonthAvg').textContent = '1.5/day';
+            document.getElementById('compareLastMonth').textContent = '38';
+            document.getElementById('compareLastMonthAvg').textContent = '1.2/day';
+            document.getElementById('compareChange').textContent = '+7';
+            document.getElementById('compareGrowth').textContent = '+18.4%';
+        }
+
+        function showDetailModal(type, id) {
+            const modal = document.getElementById('detailModal');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            if (type === 'book' && id) {
+                const book = allData.books.find(b => b.id === id);
+                if (book) {
+                    title.textContent = 'Book Details';
+                    body.innerHTML = `
+                        <div class="modal-detail">
+                            <div class="modal-detail-label">Title</div>
+                            <div class="modal-detail-value">${book.title}</div>
+                        </div>
+                        <div class="modal-detail">
+                            <div class="modal-detail-label">Category</div>
+                            <div class="modal-detail-value">${book.category}</div>
+                        </div>
+                        <div class="modal-detail">
+                            <div class="modal-detail-label">Total Borrowings</div>
+                            <div class="modal-detail-value">${book.borrowed}</div>
+                        </div>
+                        <div class="modal-detail">
+                            <div class="modal-detail-label">Average per Month</div>
+                            <div class="modal-detail-value">${(book.borrowed / 3).toFixed(1)}</div>
+                        </div>
+                    `;
+                    modal.classList.add('active');
+                }
+            } else if (type === 'borrower' && id) {
+                const borrower = allData.borrowers.find(b => b.id === id);
+                if (borrower) {
+                    title.textContent = 'Borrower Details';
+                    body.innerHTML = `
+                        <div class="modal-detail">
+                            <div class="modal-detail-label">Name</div>
+                            <div class="modal-detail-value">${borrower.name}</div>
+                        </div>
+                        <div class="modal-detail">
+                            <div class="modal-detail-label">Role</div>
+                            <div class="modal-detail-value">${borrower.role}</div>
+                        </div>
+                        <div class="modal-detail">
+                            <div class="modal-detail-label">Department</div>
+                            <div class="modal-detail-value">${borrower.department}</div>
+                        </div>
+                        <div class="modal-detail">
+                            <div class="modal-detail-label">Total Borrowings</div>
+                            <div class="modal-detail-value">${borrower.borrowed}</div>
+                        </div>
+                    `;
+                    modal.classList.add('active');
+                }
+            }
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        function exportPDF() {
+            const element = document.querySelector('.container');
+            const opt = {
+                margin: 10,
+                filename: 'borrowing-statistics.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        function exportCSV() {
+            let csv = 'Book Title,Category,Times Borrowed\n';
+            allData.books.forEach(book => {
+                csv += `"${book.title}","${book.category}",${book.borrowed}\n`;
+            });
+            
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
+            element.setAttribute('download', 'borrowing-statistics.csv');
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('userId');
+                window.location.href = '../index.html';
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDetailModal();
+            }
+        });
+    </script>
+</body>
+</html>

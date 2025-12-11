@@ -149,6 +149,17 @@
             border-color: #8B3A3A;
         }
 
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
         .divider {
             text-align: center;
             margin: 20px 0;
@@ -319,6 +330,10 @@
                     <span>🔐</span>
                     <span>Sign In With Account</span>
                 </a>
+
+                <button class="btn btn-secondary" onclick="goBackToDashboard()" style="margin-top: 10px;">
+                    <span>← Back to Dashboard</span>
+                </button>
             </div>
 
             <div class="loading" id="loadingState">
@@ -447,6 +462,19 @@
                     toast.remove();
                 }, 300);
             }, 3000);
+        }
+
+        function goBackToDashboard() {
+            const user = JSON.parse(sessionStorage.getItem('userData') || '{}');
+            if (user.role === 'student') {
+                window.location.href = 'student-dashboard.html';
+            } else if (user.role === 'teacher') {
+                window.location.href = 'teacher-dashboard.html';
+            } else if (user.role === 'admin' || user.role === 'super-admin') {
+                window.location.href = 'admin-dashboard.html';
+            } else {
+                window.location.href = 'guest-dashboard.html';
+            }
         }
     </script>
 </body>
