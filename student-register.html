@@ -328,24 +328,38 @@
                 return;
             }
 
-            // Registration successful
-            const userData = {
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                studentId: studentId,
-                grade: grade,
-                section: section,
-                role: 'student',
-                registeredDate: new Date().toLocaleString()
-            };
+                // Submit to server
+                const payload = {
+                    name: `${firstName} ${lastName}`,
+                    email: email,
+                    role: 'student',
+                    password: password,
+                    student_id: studentId,
+                    grade,
+                    section
+                };
 
-            sessionStorage.setItem('userData', JSON.stringify(userData));
-            showAlert('Account created successfully! Redirecting to login...', 'success');
-
-            setTimeout(() => {
-                window.location.href = 'student-login.html';
-            }, 1500);
+                fetch('/api/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).then(async (r) => {
+                    if (!r.ok) {
+                        const err = await r.json().catch(() => ({}));
+                        throw new Error(err.error || 'Registration failed');
+                    }
+                    return r.json();
+                }).then((data) => {
+                    // store minimal session info and redirect to login
+                    if (data && data.user) {
+                        sessionStorage.setItem('userData', JSON.stringify(data.user));
+                    }
+                    showAlert('Account created successfully! Redirecting to login...', 'success');
+                    setTimeout(() => { window.location.href = 'student-login.html'; }, 1300);
+                }).catch((err) => {
+                    console.error(err);
+                    showAlert(err.message || 'Server error during registration', 'error');
+                });
         });
 
         function showAlert(message, type) {

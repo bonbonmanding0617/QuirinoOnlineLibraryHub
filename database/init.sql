@@ -41,6 +41,11 @@ SELECT 'wishlist', COUNT(*) FROM wishlist
 UNION ALL
 SELECT 'activity_log', COUNT(*) FROM activity_log;
 
+-- Ensure activity_log has admin_ip column (nullable)
+-- This will be a no-op if column already exists in newer schemas.
+ALTER TABLE activity_log
+    ADD COLUMN IF NOT EXISTS admin_ip VARCHAR(45) NULL AFTER resource_id;
+
 -- ============================================
 -- END OF INITIALIZATION
 -- ============================================

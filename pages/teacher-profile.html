@@ -462,55 +462,44 @@
                 return;
             }
 
-            // Read and display image
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const profilePicData = e.target.result;
-                
-                // Get current user
-                let userData = storageManager.getCurrentUser();
-                if (!userData) {
-                    userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
-                }
-                
-                // Save profile picture to permanent storage
-                userData.profilePic = profilePicData;
-                storageManager.updateUser(userData);
-                sessionStorage.setItem('userData', JSON.stringify(userData));
-                
-                document.getElementById('profilePicDisplay').innerHTML = `<img src="${profilePicData}" alt="Profile">`;
-                showAlert('✅ Profile picture updated successfully!', 'success');
-            };
-            reader.readAsDataURL(file);
+            // Upload to server
+            let userData = storageManager.getCurrentUser(); if (!userData) userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+            const fd = new FormData(); fd.append('profile', file);
+            fetch(`/api/users/${userData.id}/profile-picture`, { method: 'PUT', body: fd })
+            .then(async (r) => { if (!r.ok) throw new Error((await r.json().catch(()=>({}))).error || 'Upload failed'); return r.json(); })
+            .then((data) => {
+                const profileUrl = data.profile_picture || data.profilePicture || null;
+                if (profileUrl) {
+                    storageManager.updateUser({ ...userData, profilePic: profileUrl });
+                    storageManager.setCurrentUser({ ...userData, profilePic: profileUrl });
+                    sessionStorage.setItem('userData', JSON.stringify({ ...userData, profilePic: profileUrl }));
+                    document.getElementById('profilePicDisplay').innerHTML = `<img src="${profileUrl}" alt="Profile">`;
+                    showAlert('✅ Profile picture uploaded and saved to server!', 'success');
+                } else { showAlert('⚠️ Upload completed but no URL returned', 'info'); }
+            }).catch((err) => { console.error(err); showAlert(err.message || 'Server error during upload', 'error'); });
         }
 
-        document.getElementById('profileForm').addEventListener('submit', (e) => {
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            let userData = storageManager.getCurrentUser(); if (!userData) userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+            const payload = {
+                name: `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`,
+                email: document.getElementById('email').value,
+                school: document.getElementById('school').value,
+                department: document.getElementById('department').value,
+                specialization: document.getElementById('specialization').value,
+                phone: document.getElementById('phone').value
+            };
 
-            // Get current user from storageManager or sessionStorage
-            let userData = storageManager.getCurrentUser();
-            if (!userData) {
-                userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
-            }
-            
-            // Update user data
-            userData.first_name = document.getElementById('firstName').value;
-            userData.last_name = document.getElementById('lastName').value;
-            userData.email = document.getElementById('email').value;
-            userData.school = document.getElementById('school').value;
-            userData.department = document.getElementById('department').value;
-            userData.specialization = document.getElementById('specialization').value;
-            userData.phone = document.getElementById('phone').value;
-
-            // Save to permanent storage
-            storageManager.updateUser(userData);
-            sessionStorage.setItem('userData', JSON.stringify(userData));
-            showAlert('✅ Profile updated successfully!', 'success');
-            
-            // Reload to reflect changes
-            setTimeout(() => {
-                location.reload();
-            }, 1500);
+            try {
+                const res = await fetch(`/api/users/${userData.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (!res.ok) throw new Error((await res.json().catch(()=>({}))).error || 'Failed to update profile');
+                const result = await res.json();
+                const updatedUser = result.user || { ...userData, ...payload };
+                storageManager.updateUser(updatedUser); storageManager.setCurrentUser(updatedUser); sessionStorage.setItem('userData', JSON.stringify(updatedUser));
+                showAlert('✅ Profile updated successfully and saved to server!', 'success');
+                setTimeout(() => { location.reload(); }, 1200);
+            } catch (err) { console.error(err); showAlert(err.message || 'Server error while saving profile', 'error'); }
         });
 
         function resetForm() {

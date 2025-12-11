@@ -629,10 +629,8 @@
             document.getElementById('confirmModal').classList.remove('show');
 
             const user = storageManager.getCurrentUser();
-            const updatedUser = {
-                ...user,
-                first_name: document.getElementById('firstName').value.trim(),
-                last_name: document.getElementById('lastName').value.trim(),
+            const payload = {
+                name: `${document.getElementById('firstName').value.trim()} ${document.getElementById('lastName').value.trim()}`,
                 email: document.getElementById('email').value.trim(),
                 phone: document.getElementById('phone').value.trim(),
                 address: document.getElementById('address').value.trim(),
@@ -642,51 +640,38 @@
             };
 
             const newPassword = document.getElementById('password').value;
-            if (newPassword) {
-                updatedUser.password = newPassword;
-            }
+            if (newPassword) payload.password = newPassword;
 
-            // Layer 1: Update localStorage (primary persistent storage)
-            const allUsers = storageManager.getAllUsers();
-            const userIndex = allUsers.findIndex(u => u.id === user.id);
-            if (userIndex !== -1) {
-                allUsers[userIndex] = updatedUser;
-                localStorage.setItem('POLIS_users', JSON.stringify(allUsers));
-                console.log('✅ Layer 1 - localStorage updated:', updatedUser);
-            }
+            // Send to server
+            fetch(`/api/users/${user.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(async (r) => {
+                if (!r.ok) throw new Error((await r.json().catch(()=>({}))).error || 'Failed to update profile');
+                return r.json();
+            }).then((res) => {
+                const updatedUser = res.user || { ...user, ...payload };
+                // Update local layers
+                const allUsers = storageManager.getAllUsers();
+                const userIndex = allUsers.findIndex(u => u.id === user.id);
+                if (userIndex !== -1) { allUsers[userIndex] = updatedUser; localStorage.setItem('POLIS_users', JSON.stringify(allUsers)); }
+                storageManager.updateUser(updatedUser);
+                storageManager.setCurrentUser(updatedUser);
+                sessionStorage.setItem('userData', JSON.stringify(updatedUser));
+                sessionStorage.setItem('POLIS_currentUser', JSON.stringify(updatedUser));
 
-            // Layer 2: Update storageManager (system data manager)
-            storageManager.updateUser(updatedUser);
-            console.log('✅ Layer 2 - storageManager.updateUser() executed');
+                isEditMode = false;
+                editableFields.forEach(field => { const input = document.getElementById(field); input.setAttribute('readonly', ''); });
+                document.getElementById('editBtn').classList.remove('mode-edit');
+                document.getElementById('cancelBtn').style.display = 'none';
+                document.getElementById('picUploadSection').style.display = 'none';
+                document.getElementById('password').value = '';
+                document.getElementById('confirmPassword').value = '';
 
-            // Layer 3: Update current session user
-            storageManager.setCurrentUser(updatedUser);
-            console.log('✅ Layer 3 - storageManager.setCurrentUser() executed');
-
-            // Layer 4: Update sessionStorage (temporary session data)
-            sessionStorage.setItem('userData', JSON.stringify(updatedUser));
-            sessionStorage.setItem('POLIS_currentUser', JSON.stringify(updatedUser));
-            console.log('✅ Layer 4 - sessionStorage updated:', updatedUser);
-
-            // Verify all storage layers
-            verifyStorageLayers(updatedUser);
-
-            isEditMode = false;
-            editableFields.forEach(field => {
-                const input = document.getElementById(field);
-                input.setAttribute('readonly', '');
-            });
-
-            document.getElementById('editBtn').classList.remove('mode-edit');
-            document.getElementById('cancelBtn').style.display = 'none';
-            document.getElementById('picUploadSection').style.display = 'none';
-            document.getElementById('password').value = '';
-            document.getElementById('confirmPassword').value = '';
-
-            // Reload to show updated data
-            loadProfile();
-            saveOriginalData();
-            showAlert('✅ Profile updated successfully across all storage layers!', 'success');
+                loadProfile(); saveOriginalData();
+                showAlert('✅ Profile updated successfully and persisted to server!', 'success');
+            }).catch((err) => { console.error(err); showAlert(err.message || 'Server error while saving profile', 'error'); });
         }
 
         function verifyStorageLayers(userData) {
@@ -736,47 +721,23 @@
                     return;
                 }
 
-                // Read and display image
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const imageData = event.target.result;
-                    const img = document.getElementById('profilePic');
-                    img.src = imageData;
-                    img.style.display = 'inline-block';
-                    document.getElementById('picPlaceholder').style.display = 'none';
-
-                    // Save to all storage layers
-                    const user = storageManager.getCurrentUser();
-                    const updatedUser = {
-                        ...user,
-                        profilePic: imageData
-                    };
-
-                    // Layer 1: Update localStorage (primary persistent storage)
-                    const allUsers = storageManager.getAllUsers();
-                    const userIndex = allUsers.findIndex(u => u.id === user.id);
-                    if (userIndex !== -1) {
-                        allUsers[userIndex] = updatedUser;
-                        localStorage.setItem('POLIS_users', JSON.stringify(allUsers));
-                        console.log('✅ Layer 1 - Profile picture saved to localStorage');
-                    }
-
-                    // Layer 2: Update storageManager (system data manager)
-                    storageManager.updateUser(updatedUser);
-                    console.log('✅ Layer 2 - Profile picture saved via storageManager.updateUser()');
-
-                    // Layer 3: Update current session user
-                    storageManager.setCurrentUser(updatedUser);
-                    console.log('✅ Layer 3 - Profile picture updated in storageManager.setCurrentUser()');
-
-                    // Layer 4: Update sessionStorage (temporary session data)
-                    sessionStorage.setItem('userData', JSON.stringify(updatedUser));
-                    sessionStorage.setItem('POLIS_currentUser', JSON.stringify(updatedUser));
-                    console.log('✅ Layer 4 - Profile picture saved to sessionStorage');
-
-                    showAlert('✅ Profile picture updated and saved across all storage layers!', 'success');
-                };
-                reader.readAsDataURL(file);
+                // Upload file to server
+                const user = storageManager.getCurrentUser();
+                const fd = new FormData(); fd.append('profile', file);
+                fetch(`/api/users/${user.id}/profile-picture`, { method: 'PUT', body: fd })
+                .then(async (r) => { if (!r.ok) throw new Error((await r.json().catch(()=>({}))).error || 'Upload failed'); return r.json(); })
+                .then((data) => {
+                    const profileUrl = data.profile_picture || data.profilePicture || null;
+                    if (profileUrl) {
+                        const img = document.getElementById('profilePic'); img.src = profileUrl; img.style.display = 'inline-block'; document.getElementById('picPlaceholder').style.display = 'none';
+                        const updatedUser = { ...user, profilePic: profileUrl };
+                        const allUsers = storageManager.getAllUsers(); const userIndex = allUsers.findIndex(u => u.id === user.id);
+                        if (userIndex !== -1) { allUsers[userIndex] = updatedUser; localStorage.setItem('POLIS_users', JSON.stringify(allUsers)); }
+                        storageManager.updateUser(updatedUser); storageManager.setCurrentUser(updatedUser);
+                        sessionStorage.setItem('userData', JSON.stringify(updatedUser)); sessionStorage.setItem('POLIS_currentUser', JSON.stringify(updatedUser));
+                        showAlert('✅ Profile picture uploaded and saved to server!', 'success');
+                    } else { showAlert('⚠️ Upload completed but no URL returned', 'info'); }
+                }).catch((err)=>{ console.error(err); showAlert(err.message || 'Server error during upload','error'); });
             });
         }
 
